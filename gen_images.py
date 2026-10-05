@@ -29,7 +29,7 @@ for i, (slug, desc) in enumerate(FACTS):
         print(f"skip {slug} (exists)"); continue
     print(f"[{i+1}/15] {slug}...", flush=True)
     try:
-        data = post("/images/generations", {"model": "muse-image-1.0", "prompt": STYLE + desc, "size": "1024x1024"})
+        data = post("/images/generations", {"model": "muse-image-1.0", "prompt": STYLE + desc, "size": "1536x864"})
         with open(path, "wb") as f:
             f.write(base64.b64decode(data["data"][0]["b64_json"]))
         print(f"  saved {os.path.getsize(path)//1024} KB")

@@ -39,11 +39,10 @@ FACTS = [
 ]
 
 def img_tag(slug):
-    p = os.path.join(IMG, slug + ".png")
+    p = os.path.join(IMG, slug + ".webp")
     if not os.path.exists(p):
         return '<div class="noimg"></div>'
-    b64 = base64.b64encode(open(p, "rb").read()).decode()
-    return f'<img src="data:image/png;base64,{b64}" alt="" loading="lazy">'
+    return f'<img src="images/{slug}.webp" alt="" loading="lazy">' 
 
 cards = []
 for i, (slug, title, text) in enumerate(FACTS, 1):
