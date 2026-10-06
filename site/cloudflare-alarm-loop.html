@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Incident Record: The $10,811 Cloudflare Alarm Loop — Team Playbook</title>
+<title>Incident Record: Two Cloudflare Bills, One Lesson — Team Playbook</title>
 <meta name="description" content="Analysis of the Oct 2026 Cloudflare Durable Object alarm-loop billing incident and our team's prevention plan.">
 <style>
   * { box-sizing: border-box; }
@@ -43,8 +43,8 @@
 
 <header>
   <div class="kicker">Team incident record · Cloudflare</div>
-  <h1>The $10,811 Alarm Loop</h1>
-  <p class="sub">How an AI-written Durable Object bug burned a month's budget in days — and our plan to never be that thread.</p>
+  <h1>Two Bills, One Lesson</h1>
+  <p class="sub">How AI-written code burned $10,811 and $1,000 on Cloudflare — and our plan to never be that thread.</p>
 </header>
 
 <main>
@@ -52,12 +52,13 @@
 <div class="tldr">
   <h2>TL;DR</h2>
   <p>On Oct 6, 2026, a developer reported a <strong>US$10,811.41 Cloudflare invoice</strong> caused by a Durable Object <code>alarm()</code> handler that re-scheduled itself in an infinite loop — code written by an AI coding agent. Cloudflare support denied any credit: usage-based billing charges for resources actually consumed, and the loop was customer code, not a metering fault.</p>
-  <p><strong>Our takeaway:</strong> this failure mode is real, documented, and recurring. The fix is not "be careful" — it's guardrails in code, billing alerts with an owner, and a review gate for AI-generated scheduling code. The full playbook is below.</p>
-  <p class="zh"><strong>中文摘要：</strong>2026年10月6日，一名开发者因 AI 生成的 Durable Object <code>alarm()</code> 死循环代码收到 Cloudflare <strong>约 $10,811 美元</strong>账单，官方拒绝减免（按实际用量计费，属客户代码问题）。此类事故真实且反复发生。下面是我们的团队防范方案：代码层面加熔断与开关、账单告警指定负责人、AI 生成的调度类代码必须人工复核。</p>
+  <p>Two days earlier, another developer reported a <strong>~US$1,000 bill</strong>: an AI-vibe-coded voting page polled an API endpoint every 3 seconds from every open browser tab, racking up <strong>2.6 billion requests</strong>.</p>
+  <p><strong>Our takeaway:</strong> this failure mode is real, documented, and recurring. The fix is not "be careful" — it's guardrails in code, billing alerts with an owner, and a review gate for AI-generated scheduling and polling code. The full playbook is below.</p>
+  <p class="zh"><strong>中文摘要：</strong>2026年10月，两起 AI 生成代码导致的 Cloudflare 天价账单：一是 Durable Object <code>alarm()</code> 死循环，账单约 <strong>$10,811</strong>，官方拒绝减免；二是 AI 写的投票页面每 3 秒轮询接口，产生 <strong>26 亿次请求</strong>，账单约 <strong>$1,000</strong>。此类事故真实且反复发生。下面是我们的团队防范方案：代码层面加熔断与开关、账单告警指定负责人、AI 生成的调度/轮询类代码必须人工复核。</p>
 </div>
 
 <section class="card">
-  <h2 class="sec">1. What happened</h2>
+  <h2 class="sec">1. Case 1 — the $10,811 alarm loop</h2>
   <ul>
     <li>A small-team developer's Cloudflare account was hit with an invoice of <strong>US$10,811.41</strong> for one billing period.</li>
     <li>Root cause: a project using Durable Objects had an <code>alarm()</code> handler that called <code>setAlarm()</code> again at the end of every run — including failed runs — creating a tight infinite loop. The loop performed <strong>~600,000+ storage read/write operations</strong>.</li>
@@ -71,11 +72,24 @@
 </section>
 
 <section class="card">
-  <h2 class="sec">2. How an alarm loop burns money</h2>
-  <p>On the Workers Paid plan, Durable Objects are metered on three axes — and an alarm loop spins all three at once:</p>
+  <h2 class="sec">2. Case 2 — the 2.6-billion-request poll</h2>
+  <ul>
+    <li>On Oct 4, 2026, a developer reported a Cloudflare bill of <strong>~US$1,000</strong> for a simple voting site.</li>
+    <li>The site was "vibe-coded" in a few sentences with an AI agent. The generated frontend polled an <code>api/result</code> endpoint <strong>every 3 seconds from every open browser tab</strong> — an unbounded polling loop with no backoff, no stop condition, and no caching.</li>
+    <li>Total damage: <strong>2.6 billion requests</strong>. The math checks out: on the Workers Paid plan (~$0.50 per million requests beyond the included quota), 2.6B requests ≈ $1,000+.</li>
+    <li>The reporter's own post-mortem: <em>didn't have the agent's output reviewed, didn't add throttling</em> — "these could have been constrained in the prompt; I was careless."</li>
+  </ul>
+  <div class="verdict">
+    <strong>Verdict: consistent with the same root cause.</strong> No exotic bug here — just client-side code multiplying a cheap operation by every visitor and every second. Any fixed-interval poller with real traffic becomes a request firehose. This one is arguably <em>more</em> likely to hit a normal team than the alarm loop.
+  </div>
+</section>
+
+<section class="card">
+  <h2 class="sec">3. How the meters burn money</h2>
+  <p>Two different bugs, same billing model. Case 1 spins all three Durable Object meters at once; Case 2 is pure request volume on Workers:</p>
   <table>
-    <tr><th>Meter</th><th>Paid plan</th><th>What a loop does</th></tr>
-    <tr><td>Requests (incl. alarm invocations)</td><td>1M/month included, then <strong>$0.15 / million</strong></td><td>Every alarm firing = a request. A tight loop fires thousands per hour, 24/7.</td></tr>
+    <tr><th>Meter</th><th>Paid plan</th><th>What the bugs do</th></tr>
+    <tr><td>Requests (incl. alarm invocations)</td><td>Workers: 10M/month included, then <strong>$0.50 / million</strong><br>DO: 1M/month included, then <strong>$0.15 / million</strong></td><td>Case 2: 2.6B polls ≈ $1,000+. Case 1: every alarm firing = a request, thousands per hour, 24/7.</td></tr>
     <tr><td>Duration (GB-s)</td><td>400K GB-s/month included, then <strong>$12.50 / million GB-s</strong></td><td>The object stays active in memory the whole time — billed wall-clock.</td></tr>
     <tr><td>Storage rows read / written</td><td>Metered per million operations</td><td>Each loop iteration reads state and writes it back. 600K+ ops in the reported case.</td></tr>
   </table>
@@ -85,7 +99,7 @@
 </section>
 
 <section class="card">
-  <h2 class="sec">3. The prevention plan — team playbook</h2>
+  <h2 class="sec">4. The prevention plan — team playbook</h2>
 
   <h3><span class="num-badge">RULE 1</span><br>Code rules for anything that schedules itself</h3>
   <p>Alarms, Cron Triggers, Queues with retries, recursive <code>fetch()</code> — any construct that can re-trigger itself must carry all of these:</p>
@@ -120,8 +134,19 @@
   <h3><span class="num-badge">RULE 2</span><br>AI-generated code review gate</h3>
   <p>The incident's code was AI-written and committed without a close read. New team rule:</p>
   <ul>
-    <li>Any AI-generated code touching <strong>alarms, cron triggers, queues, retries, or recursive scheduling</strong> must be reviewed by a human against Rule 1 before merge. Add it as a PR-template checklist item.</li>
-    <li>Treat AI output as a junior dev's first draft: fast, plausible, and exactly the kind of code that writes <code>setAlarm()</code> at the bottom "to keep it running."</li>
+    <li>Any AI-generated code touching <strong>alarms, cron triggers, queues, retries, recursive scheduling, or client polling</strong> must be reviewed by a human against Rule 1 before merge. Add it as a PR-template checklist item.</li>
+    <li>Treat AI output as a junior dev's first draft: fast, plausible, and exactly the kind of code that writes <code>setAlarm()</code> at the bottom "to keep it running" — or a <code>setInterval(fetch, 3000)</code> that never stops.</li>
+  </ul>
+
+  <h3><span class="num-badge">RULE 2b</span><br>Polling rules — the Case 2 fix</h3>
+  <p>A fixed-interval poller multiplied by every open tab is a request firehose. Any client polling a metered endpoint must have:</p>
+  <ul>
+    <li><strong>No dumb fixed intervals.</strong> Back off when nothing changes (e.g. 3s → 10s → 30s on identical responses), and stop entirely after N unchanged polls.</li>
+    <li><strong>Pause when hidden.</strong> Stop polling when <code>document.hidden</code> — background tabs are pure waste.</li>
+    <li><strong>Conditional requests.</strong> Use ETags / <code>If-None-Match</code> so unchanged polls return 304 instead of full responses.</li>
+    <li><strong>Prefer push over poll.</strong> WebSocket or SSE for live data; one connection replaces thousands of polls.</li>
+    <li><strong>Cache at the edge.</strong> Short Cache-Control on the polled endpoint so repeat polls hit cache, not the Worker.</li>
+    <li><strong>Server-side rate limit</strong> per client as the last line of defense.</li>
   </ul>
 
   <h3><span class="num-badge">RULE 3</span><br>Billing guardrails with a named owner</h3>
@@ -143,14 +168,15 @@
     <li>Flip the kill switch (or delete/disable the Worker) <strong>first</strong> — stop the meter before diagnosing.</li>
     <li>Check the dashboard: which meter spiked, when it started, which deployment introduced it.</li>
     <li>Contact support with evidence — but know the policy: customer-code loops are <strong>not</strong> credited. Prevention is the only refund.</li>
-    <li>Post-mortem: which guardrail was missing, and add it to Rule 1–4.</li>
+    <li>Post-mortem: which guardrail was missing, and add it to the rules above.</li>
   </ol>
 </section>
 
 <section class="card">
-  <h2 class="sec">4. Sources</h2>
+  <h2 class="sec">5. Sources</h2>
   <ul>
-    <li>Incident thread: @shmily7 on X, Oct 6 2026 (screenshot; ~$10,811.41 invoice, Codex-generated Durable Object alarm loop, credit denied).</li>
+    <li>Case 1 thread: @shmily7 on X, Oct 6 2026 (screenshot; ~$10,811.41 invoice, Codex-generated Durable Object alarm loop, credit denied).</li>
+    <li>Case 2 thread: @keking99 on X, Oct 4 2026 (screenshot; ~$1,000 bill, AI-vibe-coded voting page polling every 3s, 2.6B requests).</li>
     <li><a href="https://dev.to/howardzlh/why-cloudflare-bills-spike-8-d1-and-durable-objects-cases-from-2026-288a">Why Cloudflare bills spike: 8 D1 and Durable Objects cases from 2026</a> — documents the recurring alarm-loop pattern, including a ~$34,895 case.</li>
     <li><a href="https://developers.cloudflare.com/durable-objects/platform/pricing/">Cloudflare Durable Objects pricing</a> — requests $0.15/M, duration $12.50/M GB-s on Paid; alarm invocations count as requests.</li>
   </ul>

@@ -8,3 +8,4 @@ Built with the Meta Model API (muse-image-1.0, ~$0.01/image).
 ## Live
 
 https://fun-facts-self-59d1.vercel.app
+https://fun.feedos.si (custom domain)
