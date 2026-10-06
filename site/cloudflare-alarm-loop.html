@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Incident Record: The $10,811 Cloudflare Alarm Loop — Team Playbook</title>
+<meta name="description" content="Analysis of the Oct 2026 Cloudflare Durable Object alarm-loop billing incident and our team's prevention plan.">
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: Georgia, 'Times New Roman', serif; background: #f7f2e9; color: #2b2620; margin: 0; padding: 0; line-height: 1.7; }
+  header { text-align: center; padding: 56px 20px 20px; max-width: 860px; margin: 0 auto; }
+  header .kicker { font-size: .8rem; letter-spacing: 3px; color: #b39b6d; text-transform: uppercase; }
+  header h1 { font-size: 2.1rem; margin: 10px 0 8px; letter-spacing: -0.5px; line-height: 1.25; }
+  header p.sub { color: #8a7f6d; font-style: italic; margin: 0; }
+  main { max-width: 860px; margin: 0 auto; padding: 10px 20px 64px; }
+  .tldr { background: #fffdf8; border: 2px solid #d8cba8; border-radius: 14px; padding: 22px 26px; margin: 26px 0 34px; box-shadow: 0 2px 10px rgba(90,70,40,.06); }
+  .tldr h2 { margin: 0 0 10px; font-size: 1.1rem; }
+  .tldr p { margin: 8px 0; }
+  .tldr .zh { color: #6b5f4c; font-size: .95rem; border-top: 1px dashed #e8dfcd; padding-top: 10px; margin-top: 12px; }
+  section.card { background: #fffdf8; border: 1px solid #e8dfcd; border-radius: 14px; padding: 24px 28px; margin: 22px 0; box-shadow: 0 2px 10px rgba(90,70,40,.06); }
+  h2.sec { font-size: 1.35rem; margin: 0 0 12px; }
+  h3 { font-size: 1.08rem; margin: 20px 0 8px; color: #4a3f2e; }
+  p, li { color: #4d4436; }
+  ul, ol { padding-left: 22px; }
+  li { margin: 7px 0; }
+  .verdict { background: #f0f7ee; border: 1px solid #cfe3c8; border-radius: 10px; padding: 16px 20px; margin: 16px 0; }
+  .verdict strong { color: #2f6b2a; }
+  .warn { background: #fdf3e7; border: 1px solid #ecd9b8; border-radius: 10px; padding: 16px 20px; margin: 16px 0; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .88em; background: #f1ead9; padding: 1px 6px; border-radius: 4px; }
+  pre { background: #2b2620; color: #f0e9d8; border-radius: 10px; padding: 18px 20px; overflow-x: auto; font-size: .82rem; line-height: 1.55; }
+  pre .c { color: #9db87a; } pre .k { color: #e8b86d; } pre .s { color: #a8c8e8; }
+  .num-badge { display: inline-block; background: #b3352b; color: #fff; font-family: ui-sans-serif, system-ui; font-size: .75rem; font-weight: 700; border-radius: 20px; padding: 2px 12px; letter-spacing: 1px; margin-bottom: 6px; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: .92rem; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid #e8dfcd; }
+  th { background: #f5efe0; font-family: ui-sans-serif, system-ui; font-size: .8rem; letter-spacing: .5px; }
+  footer { text-align: center; color: #8a7f6d; font-size: .85rem; padding: 0 20px 48px; font-style: italic; }
+  footer a { color: #8a7f6d; }
+  a { color: #0a66c2; }
+  .back { text-align: center; margin: 30px 0 10px; font-family: ui-sans-serif, system-ui; font-size: .9rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">Team incident record · Cloudflare</div>
+  <h1>The $10,811 Alarm Loop</h1>
+  <p class="sub">How an AI-written Durable Object bug burned a month's budget in days — and our plan to never be that thread.</p>
+</header>
+
+<main>
+
+<div class="tldr">
+  <h2>TL;DR</h2>
+  <p>On Oct 6, 2026, a developer reported a <strong>US$10,811.41 Cloudflare invoice</strong> caused by a Durable Object <code>alarm()</code> handler that re-scheduled itself in an infinite loop — code written by an AI coding agent. Cloudflare support denied any credit: usage-based billing charges for resources actually consumed, and the loop was customer code, not a metering fault.</p>
+  <p><strong>Our takeaway:</strong> this failure mode is real, documented, and recurring. The fix is not "be careful" — it's guardrails in code, billing alerts with an owner, and a review gate for AI-generated scheduling code. The full playbook is below.</p>
+  <p class="zh"><strong>中文摘要：</strong>2026年10月6日，一名开发者因 AI 生成的 Durable Object <code>alarm()</code> 死循环代码收到 Cloudflare <strong>约 $10,811 美元</strong>账单，官方拒绝减免（按实际用量计费，属客户代码问题）。此类事故真实且反复发生。下面是我们的团队防范方案：代码层面加熔断与开关、账单告警指定负责人、AI 生成的调度类代码必须人工复核。</p>
+</div>
+
+<section class="card">
+  <h2 class="sec">1. What happened</h2>
+  <ul>
+    <li>A small-team developer's Cloudflare account was hit with an invoice of <strong>US$10,811.41</strong> for one billing period.</li>
+    <li>Root cause: a project using Durable Objects had an <code>alarm()</code> handler that called <code>setAlarm()</code> again at the end of every run — including failed runs — creating a tight infinite loop. The loop performed <strong>~600,000+ storage read/write operations</strong>.</li>
+    <li>The buggy code was written by an AI coding agent (the reporter blames Codex-generated code that was committed without close review).</li>
+    <li>Cloudflare support's reply: <em>"the alarm loop in your Workers … the loop originated from a bug in your Worker code rather than Cloudflare metering or infrastructure. Support is unable to issue a credit for these Durable Objects charges."</em> The invoice stayed open and due.</li>
+    <li>Amusing footnote: the support reply was signed <em>"This reply was enhanced by Cloudflare Workers AI (Kimi K2.7 by Moonshot AI)."</em></li>
+  </ul>
+  <div class="verdict">
+    <strong>Verdict: true — and not a one-off.</strong> This exact failure mode is documented across 2026: a roundup of 8 D1/Durable-Object billing spikes includes an alarm handler that re-armed on every run (failed ones too) and ran 8 days straight to <strong>~$34,895 with zero users</strong>. The pattern is always the same: a self-scheduling construct with no guard, and the first sign of trouble is the invoice.
+  </div>
+</section>
+
+<section class="card">
+  <h2 class="sec">2. How an alarm loop burns money</h2>
+  <p>On the Workers Paid plan, Durable Objects are metered on three axes — and an alarm loop spins all three at once:</p>
+  <table>
+    <tr><th>Meter</th><th>Paid plan</th><th>What a loop does</th></tr>
+    <tr><td>Requests (incl. alarm invocations)</td><td>1M/month included, then <strong>$0.15 / million</strong></td><td>Every alarm firing = a request. A tight loop fires thousands per hour, 24/7.</td></tr>
+    <tr><td>Duration (GB-s)</td><td>400K GB-s/month included, then <strong>$12.50 / million GB-s</strong></td><td>The object stays active in memory the whole time — billed wall-clock.</td></tr>
+    <tr><td>Storage rows read / written</td><td>Metered per million operations</td><td>Each loop iteration reads state and writes it back. 600K+ ops in the reported case.</td></tr>
+  </table>
+  <div class="warn">
+    <strong>The critical asymmetry:</strong> Cloudflare's budget/threshold alerts (on by default for pay-as-you-go accounts since mid-2026) send <strong>one informational email</strong>. They do not pause, cap, or throttle anything. Someone has to log in and act. On the Free plan, by contrast, exceeding a limit makes operations <em>fail</em> — it fails closed, so it cannot surprise-bill you.
+  </div>
+</section>
+
+<section class="card">
+  <h2 class="sec">3. The prevention plan — team playbook</h2>
+
+  <h3><span class="num-badge">RULE 1</span><br>Code rules for anything that schedules itself</h3>
+  <p>Alarms, Cron Triggers, Queues with retries, recursive <code>fetch()</code> — any construct that can re-trigger itself must carry all of these:</p>
+  <ol>
+    <li><strong>Never re-arm unconditionally.</strong> <code>setAlarm()</code> inside <code>alarm()</code> must be gated on real remaining work, never the last line of the handler.</li>
+    <li><strong>Circuit breaker.</strong> Keep a consecutive-failure counter in storage. After N failures (we use 5), stop re-arming and raise an alert instead of looping.</li>
+    <li><strong>Kill switch.</strong> Check a flag (env var or KV) at the top of every scheduled handler. One flip stops the loop without a deploy.</li>
+    <li><strong>Bounded retries with capped backoff.</strong> Exponential backoff with jitter, a maximum delay, and a maximum attempt count — then dead-letter.</li>
+    <li><strong>Idempotent handlers.</strong> Check-then-act inside a storage transaction so a retried alarm can't double-apply.</li>
+  </ol>
+  <pre><span class="c">// ❌ the $10,811 pattern — do not ship this</span>
+<span class="k">async</span> alarm() {
+  <span class="k">await</span> <span class="s">this</span>.doWork();
+  <span class="k">await</span> <span class="s">this</span>.storage.setAlarm(Date.now() + 60_000); <span class="c">// unconditional re-arm</span>
+}
+
+<span class="c">// ✅ guarded pattern</span>
+<span class="k">async</span> alarm() {
+  <span class="k">if</span> (<span class="k">await</span> <span class="s">this</span>.storage.get(<span class="s">"killSwitch"</span>)) <span class="k">return</span>;
+  <span class="k">const</span> fails = (<span class="k">await</span> <span class="s">this</span>.storage.get(<span class="s">"fails"</span>)) ?? 0;
+  <span class="k">if</span> (fails >= 5) { <span class="k">await</span> <span class="s">this</span>.alert(<span class="s">"alarm circuit open"</span>); <span class="k">return</span>; }
+  <span class="k">try</span> {
+    <span class="k">const</span> more = <span class="k">await</span> <span class="s">this</span>.doWork();
+    <span class="k">await</span> <span class="s">this</span>.storage.put(<span class="s">"fails"</span>, 0);
+    <span class="k">if</span> (more) <span class="k">await</span> <span class="s">this</span>.storage.setAlarm(Date.now() + 60_000);
+  } <span class="k">catch</span> (e) {
+    <span class="k">await</span> <span class="s">this</span>.storage.put(<span class="s">"fails"</span>, fails + 1);
+    <span class="k">await</span> <span class="s">this</span>.storage.setAlarm(Date.now() + backoff(fails)); <span class="c">// capped</span>
+  }
+}</pre>
+
+  <h3><span class="num-badge">RULE 2</span><br>AI-generated code review gate</h3>
+  <p>The incident's code was AI-written and committed without a close read. New team rule:</p>
+  <ul>
+    <li>Any AI-generated code touching <strong>alarms, cron triggers, queues, retries, or recursive scheduling</strong> must be reviewed by a human against Rule 1 before merge. Add it as a PR-template checklist item.</li>
+    <li>Treat AI output as a junior dev's first draft: fast, plausible, and exactly the kind of code that writes <code>setAlarm()</code> at the bottom "to keep it running."</li>
+  </ul>
+
+  <h3><span class="num-badge">RULE 3</span><br>Billing guardrails with a named owner</h3>
+  <ul>
+    <li><strong>Threshold alerts are assigned, not just enabled.</strong> One person owns the billing-alert inbox and a 24h response SLA. An alert nobody owns is decoration.</li>
+    <li><strong>Daily usage review.</strong> A scheduled check (cron) of Workers/Durable-Object usage via the Cloudflare dashboard or GraphQL analytics API, with a sudden-jump alarm (e.g. 10x day-over-day on any meter).</li>
+    <li><strong>Experiments on Free, production on Paid.</strong> The Free plan fails closed — it cannot surprise-bill. Prototypes and AI-generated experiments stay on Free until reviewed.</li>
+    <li><strong>Separate accounts for experiments vs production</strong> where practical, so a runaway test can't touch the production invoice.</li>
+  </ul>
+
+  <h3><span class="num-badge">RULE 4</span><br>Test the failure, not just the happy path</h3>
+  <ul>
+    <li>Test alarm logic locally (Miniflare / <code>wrangler dev</code>) with a <strong>failing</strong> run: verify the handler does not re-arm into a loop.</li>
+    <li>Chaos-check: flip the kill switch mid-run and confirm the loop stops.</li>
+  </ul>
+
+  <h3><span class="num-badge">RULE 5</span><br>Incident runbook — if usage spikes</h3>
+  <ol>
+    <li>Flip the kill switch (or delete/disable the Worker) <strong>first</strong> — stop the meter before diagnosing.</li>
+    <li>Check the dashboard: which meter spiked, when it started, which deployment introduced it.</li>
+    <li>Contact support with evidence — but know the policy: customer-code loops are <strong>not</strong> credited. Prevention is the only refund.</li>
+    <li>Post-mortem: which guardrail was missing, and add it to Rule 1–4.</li>
+  </ol>
+</section>
+
+<section class="card">
+  <h2 class="sec">4. Sources</h2>
+  <ul>
+    <li>Incident thread: @shmily7 on X, Oct 6 2026 (screenshot; ~$10,811.41 invoice, Codex-generated Durable Object alarm loop, credit denied).</li>
+    <li><a href="https://dev.to/howardzlh/why-cloudflare-bills-spike-8-d1-and-durable-objects-cases-from-2026-288a">Why Cloudflare bills spike: 8 D1 and Durable Objects cases from 2026</a> — documents the recurring alarm-loop pattern, including a ~$34,895 case.</li>
+    <li><a href="https://developers.cloudflare.com/durable-objects/platform/pricing/">Cloudflare Durable Objects pricing</a> — requests $0.15/M, duration $12.50/M GB-s on Paid; alarm invocations count as requests.</li>
+  </ul>
+</section>
+
+<div class="back"><a href="index.html">← back to fun facts</a></div>
+
+</main>
+
+<footer>
+  Recorded Oct 6, 2026 · for the Feedmap team · all of us ship on Cloudflare, so all of us own these guardrails.
+</footer>
+
+</body>
+</html>
