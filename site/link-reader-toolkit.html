@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Link-Reader Toolkit — How to Give an AI Agent Eyes on LinkedIn</title>
+<meta name="description" content="Research: what tools let an AI agent read LinkedIn and other walled links, and the recommended setup for Mica.">
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: Georgia, 'Times New Roman', serif; background: #f7f2e9; color: #2b2620; margin: 0; padding: 0; line-height: 1.7; }
+  header { text-align: center; padding: 56px 20px 20px; max-width: 860px; margin: 0 auto; }
+  header .kicker { font-size: .8rem; letter-spacing: 3px; color: #b39b6d; text-transform: uppercase; }
+  header h1 { font-size: 2.1rem; margin: 10px 0 8px; letter-spacing: -0.5px; line-height: 1.25; }
+  header p.sub { color: #8a7f6d; font-style: italic; margin: 0; }
+  main { max-width: 860px; margin: 0 auto; padding: 10px 20px 64px; }
+  .tldr { background: #fffdf8; border: 2px solid #d8cba8; border-radius: 14px; padding: 22px 26px; margin: 26px 0 34px; box-shadow: 0 2px 10px rgba(90,70,40,.06); }
+  .tldr h2 { margin: 0 0 10px; font-size: 1.1rem; }
+  .tldr p { margin: 8px 0; }
+  .tldr .zh { color: #6b5f4c; font-size: .95rem; border-top: 1px dashed #e8dfcd; padding-top: 10px; margin-top: 12px; }
+  section.card { background: #fffdf8; border: 1px solid #e8dfcd; border-radius: 14px; padding: 24px 28px; margin: 22px 0; box-shadow: 0 2px 10px rgba(90,70,40,.06); }
+  h2.sec { font-size: 1.35rem; margin: 0 0 12px; }
+  h3 { font-size: 1.08rem; margin: 20px 0 8px; color: #4a3f2e; }
+  p, li { color: #4d4436; }
+  ul, ol { padding-left: 22px; }
+  li { margin: 7px 0; }
+  .verdict { background: #f0f7ee; border: 1px solid #cfe3c8; border-radius: 10px; padding: 16px 20px; margin: 16px 0; }
+  .verdict strong { color: #2f6b2a; }
+  .warn { background: #fdf3e7; border: 1px solid #ecd9b8; border-radius: 10px; padding: 16px 20px; margin: 16px 0; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .88em; background: #f1ead9; padding: 1px 6px; border-radius: 4px; }
+  pre { background: #2b2620; color: #f0e9d8; border-radius: 10px; padding: 18px 20px; overflow-x: auto; font-size: .82rem; line-height: 1.55; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: .92rem; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid #e8dfcd; vertical-align: top; }
+  th { background: #f5efe0; font-family: ui-sans-serif, system-ui; font-size: .8rem; letter-spacing: .5px; }
+  td:first-child { white-space: nowrap; font-weight: bold; }
+  .pick { display: inline-block; background: #1c5fd6; color: #fff; font-family: ui-sans-serif, system-ui; font-size: .72rem; font-weight: 700; border-radius: 20px; padding: 2px 12px; letter-spacing: 1px; margin-bottom: 6px; }
+  footer { text-align: center; color: #8a7f6d; font-size: .85rem; padding: 0 20px 48px; font-style: italic; }
+  footer a { color: #8a7f6d; }
+  a { color: #0a66c2; }
+  .back { text-align: center; margin: 30px 0 10px; font-family: ui-sans-serif, system-ui; font-size: .9rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">Research note · tooling</div>
+  <h1>How to Give an AI Agent Eyes on LinkedIn</h1>
+  <p class="sub">What "Blockus" (browser-use) actually is, what else exists, and the one-step setup that latches Mica onto walled links.</p>
+</header>
+
+<main>
+
+<div class="tldr">
+  <h2>TL;DR</h2>
+  <p><strong>"Blockus" is <a href="https://github.com/browser-use/browser-use">browser-use</a></strong> — an open-source Python library where an LLM drives a real Chromium browser. It is one of several agent-browser frameworks (others: Stagehand, Skyvern, Firecrawl, Apify).</p>
+  <p><strong>For latching Mica onto LinkedIn specifically, no new tool is needed:</strong> public LinkedIn articles are already readable (proven today — the Ad Week piece was fetched as text with zero setup), and for logged-in content the same pattern already used for Google and GitHub applies — sign into LinkedIn once in the agent's cloud browser, and every future link opens with that session.</p>
+  <p class="zh"><strong>中文摘要：</strong>你说的 "Blockus" 就是 <strong>browser-use</strong>（开源项目，让 LLM 直接操作真实浏览器）。但要让 Mica 能读 LinkedIn 这类链接，<strong>不需要装新工具</strong>：公开的 LinkedIn 文章已经可以直接读取（今天那篇 Ad Week 文章就是这么读到的）；需要登录的内容，沿用之前 Google/GitHub 的做法——在云端浏览器里登录一次 LinkedIn 即可。</p>
+</div>
+
+<section class="card">
+  <h2 class="sec">1. The problem, precisely</h2>
+  <p>LinkedIn is hostile to bots by design: aggressive bot detection, login walls on profiles and feeds, rate limits, and legal pressure on scrapers. So "reading a LinkedIn link" splits into two very different jobs:</p>
+  <ul>
+    <li><strong>Public content</strong> (pulse articles, public posts): often fetchable as plain text, no login needed. This already works today.</li>
+    <li><strong>Logged-in content</strong> (feed, profiles behind the wall, comments, messages): requires a real authenticated session. This is the part that needs a "latch."</li>
+  </ul>
+  <p>Plain scraping APIs (Firecrawl's normal scrape mode, Jina Reader) are <strong>blocked on linkedin.com</strong> — the community's escalation ladder says: don't even try them there.</p>
+</section>
+
+<section class="card">
+  <h2 class="sec">2. What already works for Mica today</h2>
+  <ul>
+    <li><strong>Text fetch (<code>browser.open</code>):</strong> reads public LinkedIn articles end-to-end. Verified today on the Ad Week / Brownstein pulse article — full text, no login, no extra tooling.</li>
+    <li><strong>Cloud browser tasks:</strong> the agent's cloud Chromium already holds working logged-in sessions for Google and GitHub (confirmed Oct 5). Any site reachable in that browser is readable, clickable, and actionable — including login-walled pages.</li>
+  </ul>
+  <div class="verdict">
+    <strong><span class="pick">RECOMMENDED</span><br>The one-step latch:</strong> sign into LinkedIn once inside the agent's cloud browser (same flow as the Google/GitHub logins). After that, every LinkedIn link you drop in chat opens with your session — articles, posts, profiles, comments. No new service, no API key, no per-page fees. When you want it done, just say "log into LinkedIn in your browser" and take over for the login step.
+  </div>
+</section>
+
+<section class="card">
+  <h2 class="sec">3. The tool landscape — if you want your own stack</h2>
+  <p>For the team's own development (separate from Mica), these are the serious options, all verified in current community usage:</p>
+  <table>
+    <tr><th>Tool</th><th>What it is</th><th>LinkedIn fit</th><th>Best for</th></tr>
+    <tr><td><a href="https://github.com/browser-use/browser-use">browser-use</a></td><td>Open-source Python library: describe the whole task in natural language, the LLM plans and drives Playwright. Full autonomy, minimal code.</td><td>Drives a real logged-in browser, so it can read whatever your session can. Higher token cost per run.</td><td>Fastest path to "agent, go do this web task."</td></tr>
+    <tr><td><a href="https://github.com/browserbase/stagehand">Stagehand</a></td><td>Open-source SDK (MIT, ~23k stars) by Browserbase. Composable primitives — <code>act()</code>, <code>extract()</code>, <code>observe()</code>, <code>agent()</code> — mixing code control with natural language where selectors would break.</td><td>Same real-browser advantage; more deterministic than full autonomy.</td><td>Production automations where you want determinism with AI fallback.</td></tr>
+    <tr><td>Firecrawl</td><td>Hosted extract API: JS rendering, anti-bot handling, structured extraction. Paid per credit.</td><td>Plain scrape is blocked on LinkedIn; only its "Agent" enrichment mode works there.</td><td>Bulk extraction from normal (non-LinkedIn) sites without managing browsers.</td></tr>
+    <tr><td>Apify</td><td>Marketplace of scraper "actors," including dedicated LinkedIn scrapers.</td><td>Purpose-built LinkedIn actors for profiles/posts at volume.</td><td>Bulk LinkedIn data collection as a managed job.</td></tr>
+    <tr><td><a href="https://github.com/Skyvern-AI/skyvern">Skyvern</a></td><td>Open-source browser agent that understands pages visually (screenshots) rather than via DOM.</td><td>Vision approach can sidestep DOM-based bot detection.</td><td>Sites where DOM parsing keeps failing.</td></tr>
+  </table>
+  <p>Also worth knowing: <a href="https://github.com/alisharjeell/openbua">OpenBUA</a> runs an agent <em>inside your everyday browser</em> via a Chrome extension — no re-login needed, since it borrows the session you already have. Same idea as the cloud-browser latch, but on your own machine.</p>
+</section>
+
+<section class="card">
+  <h2 class="sec">4. Recommended setup</h2>
+  <ol>
+    <li><strong>For Mica (immediate, free):</strong> LinkedIn login in the cloud browser. Covers articles, posts, profiles, comments — everything your account can see.</li>
+    <li><strong>For one-off bulk jobs</strong> (e.g. "pull 200 profiles"): Apify LinkedIn actor or Firecrawl Agent mode — pay per job, no browser to babysit.</li>
+    <li><strong>For the team's own agent products:</strong> browser-use to prototype, Stagehand when it needs to be deterministic and maintainable.</li>
+  </ol>
+  <div class="warn">
+    <strong>Two honest caveats.</strong> LinkedIn's terms prohibit scraping — reading links with your own logged-in session for research is the normal-use lane; bulk extraction is where accounts get flagged, so keep volume human-like. And LinkedIn changes its markup often: anything DOM-dependent (including agent frameworks) needs maintenance; the logged-in-browser approach degrades most gracefully because a human can always take over.
+  </div>
+</section>
+
+<section class="card">
+  <h2 class="sec">5. Sources</h2>
+  <ul>
+    <li><a href="https://github.com/browser-use/browser-use">browser-use</a> — open-source AI browser agent (the "Blockus" you meant).</li>
+    <li><a href="https://github.com/browserbase/stagehand">Stagehand</a> by Browserbase (<a href="https://stagehand.dev">stagehand.dev</a>) — composable browser-agent SDK, MIT.</li>
+    <li><a href="https://github.com/Skyvern-AI/skyvern">Skyvern</a> — vision-driven open-source browser agent.</li>
+    <li><a href="https://github.com/alisharjeell/openbua">OpenBUA</a> — agent running inside your everyday browser via extension.</li>
+    <li><a href="https://github.com/mattyreed1/fractal-agent-skills/blob/HEAD/scrape/SKILL.md">Community scrape routing notes</a> — documents that Firecrawl/Jina plain scrape are blocked on linkedin.com; Firecrawl Agent mode is the working path.</li>
+    <li><a href="https://docs.langchain.com/oss/python/integrations/tools/stagehand">LangChain docs: Stagehand + Browserbase</a> — MCP server setup for agent use.</li>
+  </ul>
+</section>
+
+<div class="back"><a href="index.html">← back to fun facts</a></div>
+
+</main>
+
+<footer>
+  Researched Oct 6, 2026 · for the Feedmap team.
+</footer>
+
+</body>
+</html>
