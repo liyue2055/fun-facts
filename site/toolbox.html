@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mica's Toolbox — connections, tools & scheduled jobs</title>
+<meta name="description" content="Every tool and connection Mica can use for Ken: live sites, inbox, creation tools, APIs, research, and the jobs that run overnight. Bilingual.">
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: Georgia, 'Times New Roman', serif; background: #f7f2e9; color: #2b2620; margin: 0; padding: 0; line-height: 1.75; }
+  body:lang(zh-CN) { font-family: "Noto Serif SC", "Songti SC", Georgia, serif; }
+  header { text-align: center; padding: 48px 20px 20px; max-width: 900px; margin: 0 auto; }
+  header .kicker { font-size: .8rem; letter-spacing: 3px; color: #b39b6d; text-transform: uppercase; }
+  header h1 { font-size: 2rem; margin: 10px 0 8px; letter-spacing: -0.5px; }
+  header p.sub { color: #8a7f6d; font-style: italic; margin: 0 0 18px; }
+  .lang-toggle { display: inline-flex; border: 1px solid #d8cba8; border-radius: 30px; overflow: hidden; background: #fffdf8; }
+  .lang-btn { font-family: ui-sans-serif, system-ui; font-size: .85rem; font-weight: 700; padding: 8px 22px; border: none; background: transparent; color: #8a7f6d; cursor: pointer; }
+  .lang-btn.active { background: #1b1e26; color: #fff; }
+  main { max-width: 900px; margin: 0 auto; padding: 10px 20px 64px; }
+  .tldr { background: #fffdf8; border: 2px solid #d8cba8; border-radius: 14px; padding: 22px 26px; margin: 26px 0 34px; box-shadow: 0 2px 10px rgba(90,70,40,.06); }
+  .tldr h2 { margin: 0 0 10px; font-size: 1.1rem; }
+  .tldr p { margin: 8px 0; }
+  section.card { background: #fffdf8; border: 1px solid #e8dfcd; border-radius: 14px; padding: 24px 28px; margin: 22px 0; box-shadow: 0 2px 10px rgba(90,70,40,.06); }
+  h2.sec { font-size: 1.35rem; margin: 0 0 6px; }
+  p.secsub { color: #8a7f6d; font-style: italic; margin: 0 0 14px; font-size: .95rem; }
+  .tool { display: flex; gap: 14px; padding: 13px 0; border-top: 1px solid #efe7d3; align-items: flex-start; }
+  .tool:first-of-type { border-top: none; }
+  .tool .name { font-weight: 700; min-width: 190px; }
+  .tool .name a { color: #2b2620; }
+  .tool .desc { flex: 1; font-size: .94rem; color: #4d4436; }
+  .tool .desc p { margin: 4px 0; }
+  .badge { display: inline-block; font-family: ui-sans-serif, system-ui; font-size: .7rem; font-weight: 800; letter-spacing: .6px; border-radius: 20px; padding: 2px 11px; text-transform: uppercase; white-space: nowrap; margin-top: 3px; }
+  .ok { background: #e2f2e0; color: #2f6b2a; }
+  .part { background: #fdf3e7; color: #b07a1e; }
+  .wait { background: #ececec; color: #6b6b6b; }
+  .no { background: #fbe7e7; color: #b03a3a; }
+  .cron { background: #f6f9ff; border: 1px solid #d4e2f8; border-radius: 10px; padding: 14px 18px; margin: 12px 0; }
+  .cron .when { font-family: ui-sans-serif, system-ui; font-size: .78rem; font-weight: 800; letter-spacing: 1px; color: #1c5fd6; text-transform: uppercase; }
+  .cron h3 { margin: 4px 0 6px; font-size: 1.02rem; }
+  .cron p { margin: 6px 0; font-size: .94rem; color: #4d4436; }
+  .tagrow { margin: 8px 0; }
+  .tag { display: inline-block; font-family: ui-sans-serif, system-ui; font-size: .82rem; background: #f1ead9; color: #6b5f45; border-radius: 16px; padding: 3px 12px; margin: 3px 6px 3px 0; }
+  footer { text-align: center; color: #8a7f6d; font-size: .85rem; padding: 0 20px 48px; font-style: italic; }
+  a { color: #0a66c2; }
+  .back { text-align: center; margin: 30px 0 10px; font-family: ui-sans-serif, system-ui; font-size: .9rem; }
+  @media (max-width: 640px) { .tool { flex-direction: column; gap: 4px; } .tool .name { min-width: 0; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">Connections &amp; tools</div>
+  <div class="lang-en"><h1>Mica's Toolbox</h1>
+    <p class="sub">Everything I can reach on your behalf — live sites, inbox, creation tools, APIs, research, and the jobs that run while you sleep.</p></div>
+  <div class="lang-zh" style="display:none"><h1>Mica 的工具箱</h1>
+    <p class="sub">我能替你动用的全部工具和连接——已上线的网站、邮箱、创作工具、API、研究能力，以及在你睡觉时运行的任务。</p></div>
+  <div class="lang-toggle">
+    <button class="lang-btn active" data-lang="en" onclick="setLang('en')">English</button>
+    <button class="lang-btn" data-lang="zh" onclick="setLang('zh')">中文</button>
+  </div>
+</header>
+
+<main>
+
+<div class="tldr">
+  <div class="lang-en">
+    <h2>How to read this</h2>
+    <p><span class="badge ok">connected</span> works now &nbsp; <span class="badge part">partial</span> works with a caveat &nbsp; <span class="badge wait">waiting on you</span> needs your go-ahead &nbsp; <span class="badge no">not connected</span> I can't reach it yet. Ask me any time to add, connect, or remove anything here.</p>
+  </div>
+  <div class="lang-zh" style="display:none">
+    <h2>怎么看这份清单</h2>
+    <p><span class="badge ok">已接通</span> 现在可用 &nbsp; <span class="badge part">部分可用</span> 有前提条件 &nbsp; <span class="badge wait">等你拍板</span> 需要你点头 &nbsp; <span class="badge no">未接通</span> 我还够不着。随时让我加、接、或删掉任何一项。</p>
+  </div>
+</div>
+
+<section class="card">
+  <div class="lang-en"><h2 class="sec">Live on the web</h2><p class="secsub">Sites I run and the pipes that deploy them.</p>
+    <div class="tool"><div class="name"><a href="https://feedos.si">feedos.si</a></div><div class="desc"><p>Agentic Radar — daily agentic-AI digest. DNS on Vercel nameservers, auto-renew OFF (manual renewal before Oct 2027).</p></div><div><span class="badge ok">connected</span></div></div>
+    <div class="tool"><div class="name"><a href="https://fun.feedos.si">fun.feedos.si</a></div><div class="desc"><p>Team pages — incident records, explainers, strategy notes.</p></div><div><span class="badge ok">connected</span></div></div>
+    <div class="tool"><div class="name">Vercel</div><div class="desc"><p>I deploy both projects directly — push to GitHub, Vercel builds and serves.</p></div><div><span class="badge ok">connected</span></div></div>
+    <div class="tool"><div class="name">GitHub</div><div class="desc"><p>Repos <em>agentic-radar</em> and <em>fun-facts</em> — I commit and push myself; cloud browser is logged in.</p></div><div><span class="badge ok">connected</span></div></div>
+    <div class="tool"><div class="name">Cloudflare</div><div class="desc"><p>Your team's infrastructure — but I have no API or login access to it. Say the word and I'll wire it up.</p></div><div><span class="badge no">not connected</span></div></div>
+  </div>
+  <div class="lang-zh" style="display:none"><h2 class="sec">已经上线的网站</h2><p class="secsub">我维护的网站，以及部署它们的通道。</p>
+    <div class="tool"><div class="name"><a href="https://feedos.si">feedos.si</a></div><div class="desc"><p>Agentic Radar——每日智能体新闻 digest。DNS 走 Vercel nameserver，自动续费已关（2027年10月前手动续）。</p></div><div><span class="badge ok">已接通</span></div></div>
+    <div class="tool"><div class="name"><a href="https://fun.feedos.si">fun.feedos.si</a></div><div class="desc"><p>团队页面——事故记录、讲解、战略备忘。</p></div><div><span class="badge ok">已接通</span></div></div>
+    <div class="tool"><div class="name">Vercel</div><div class="desc"><p>两个项目我都直接部署——推送到 GitHub，Vercel 构建上线。</p></div><div><span class="badge ok">已接通</span></div></div>
+    <div class="tool"><div class="name">GitHub</div><div class="desc"><p>仓库 <em>agentic-radar</em> 和 <em>fun-facts</em>——我自己提交推送；云浏览器已登录。</p></div><div><span class="badge ok">已接通</span></div></div>
+    <div class="tool"><div class="name">Cloudflare</div><div class="desc"><p>你们团队的基础设施——但我没有 API 或登录权限。需要的话我来接。</p></div><div><span class="badge no">未接通</span></div></div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="lang-en"><h2 class="sec">Inbox &amp; accounts</h2><p class="secsub">Where I can read and act for you.</p>
+    <div class="tool"><div class="name">Gmail</div><div class="desc"><p>Search, read threads, draft, send, reply, manage labels.</p></div><div><span class="badge ok">connected</span></div></div>
+    <div class="tool"><div class="name">Google (cloud browser)</div><div class="desc"><p>Logged-in session — I can operate Google sites on your behalf, same pattern as GitHub.</p></div><div><span class="badge ok">connected</span></div></div>
+  </div>
+  <div class="lang-zh" style="display:none"><h2 class="sec">邮箱与账户</h2><p class="secsub">我能替你读取和操作的地方。</p>
+    <div class="tool"><div class="name">Gmail</div><div class="desc"><p>搜索、读邮件、起草、发送、回复、标签管理。</p></div><div><span class="badge ok">已接通</span></div></div>
+    <div class="tool"><div class="name">Google（云浏览器）</div><div class="desc"><p>已登录——可以替你在 Google 网站上操作，和 GitHub 同一个模式。</p></div><div><span class="badge ok">已接通</span></div></div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="lang-en"><h2 class="sec">Making things</h2><p class="secsub">Video, audio, images, pages.</p>
+    <div class="tool"><div class="name">Remotion</div><div class="desc"><p>Installed Oct 7 at <em>~/workspace/remotion-studio</em> — code-driven motion graphics: animated text, charts, title cards. Verified rendering. Complements AI-generated footage (precise graphics where AI video is weak).</p></div><div><span class="badge ok">connected</span></div></div>
+    <div class="tool"><div class="name">AI video</div><div class="desc"><p>Photorealistic clips — 24fps at ~720p; 30s arrives as three 10s segments. Tiny on-screen text won't render readably.</p></div><div><span class="badge ok">connected</span></div></div>
+    <div class="tool"><div class="name">Voice &amp; audio</div><div class="desc"><p>Voice notes and narration via TTS. Your ElevenLabs voice + Suno music pipeline stays yours — I assemble around it.</p></div><div><span class="badge ok">connected</span></div></div>
+    <div class="tool"><div class="name">Images</div><div class="desc"><p>Generation and editing for thumbnails, posters, page art.</p></div><div><span class="badge ok">connected</span></div></div>
+  </div>
+  <div class="lang-zh" style="display:none"><h2 class="sec">创作工具</h2><p class="secsub">视频、音频、图片、页面。</p>
+    <div class="tool"><div class="name">Remotion</div><div class="desc"><p>10月7日已安装，位于 <em>~/workspace/remotion-studio</em>——代码驱动的动态图形：动画文字、图表、标题卡。已验证可渲染。和 AI 生成的 footage 互补（AI 视频做不好的精确图形，它来做）。</p></div><div><span class="badge ok">已接通</span></div></div>
+    <div class="tool"><div class="name">AI 视频</div><div class="desc"><p>写实风格片段——24fps 约720p；30秒以三段10秒形式交付。细小的屏幕文字可能渲染不清。</p></div><div><span class="badge ok">已接通</span></div></div>
+    <div class="tool"><div class="name">语音与音频</div><div class="desc"><p>TTS 语音消息和旁白。你的 ElevenLabs 声音 + Suno 音乐流程还是你的——我围绕它组装。</p></div><div><span class="badge ok">已接通</span></div></div>
+    <div class="tool"><div class="name">图片</div><div class="desc"><p>生成与编辑——缩略图、海报、页面配图。</p></div><div><span class="badge ok">已接通</span></div></div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="lang-en"><h2 class="sec">APIs &amp; keys</h2><p class="secsub">Stored in the Secure Vault — I use them, never show them.</p>
+    <div class="tool"><div class="name">Meta Model API</div><div class="desc"><p>Key in vault (<em>custom.meta-model-api</em>), skill ready — image/video generation backend.</p></div><div><span class="badge ok">connected</span></div></div>
+    <div class="tool"><div class="name">NiceNIC Domain API</div><div class="desc"><p>Skill ready, but the stored secret returns 401 — needs the correct API secret from your NiceNIC panel.</p></div><div><span class="badge part">partial</span></div></div>
+  </div>
+  <div class="lang-zh" style="display:none"><h2 class="sec">API 与密钥</h2><p class="secsub">存在 Secure Vault 里——我只用，不展示。</p>
+    <div class="tool"><div class="name">Meta Model API</div><div class="desc"><p>密钥在 vault（<em>custom.meta-model-api</em>），skill 就绪——图片/视频生成的后端。</p></div><div><span class="badge ok">已接通</span></div></div>
+    <div class="tool"><div class="name">NiceNIC Domain API</div><div class="desc"><p>skill 就绪，但存的密钥返回 401——需要你从 NiceNIC 后台拿正确的 API secret。</p></div><div><span class="badge part">部分可用</span></div></div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="lang-en"><h2 class="sec">Research</h2><p class="secsub">How I find things out.</p>
+    <div class="tool"><div class="name">Web &amp; deep research</div><div class="desc"><p>Live search, deep multi-source investigations, social listening across X/Reddit/LinkedIn.</p></div><div><span class="badge ok">connected</span></div></div>
+    <div class="tool"><div class="name">Agent Reach</div><div class="desc"><p>Free agent access to X, Reddit, YouTube, Bilibili, Xiaohongshu etc. — not installed; paused for your explicit go-ahead after its install guide failed a safety check.</p></div><div><span class="badge wait">waiting on you</span></div></div>
+    <div class="tool"><div class="name">LinkedIn (via browser)</div><div class="desc"><p>Public pages readable now; logged-in access needs you to complete the login step in the cloud browser.</p></div><div><span class="badge part">partial</span></div></div>
+  </div>
+  <div class="lang-zh" style="display:none"><h2 class="sec">研究能力</h2><p class="secsub">我怎么帮你查东西。</p>
+    <div class="tool"><div class="name">网页与深度研究</div><div class="desc"><p>实时搜索、多源深度调查、X/Reddit/LinkedIn 社交媒体监听。</p></div><div><span class="badge ok">已接通</span></div></div>
+    <div class="tool"><div class="name">Agent Reach</div><div class="desc"><p>免费让 agent 读写 X、Reddit、YouTube、B站、小红书等——未安装；它的安装指南没过安全检查，我先暂停了，等你明确点头。</p></div><div><span class="badge wait">等你拍板</span></div></div>
+    <div class="tool"><div class="name">LinkedIn（经浏览器）</div><div class="desc"><p>公开页面现在就能读；登录后内容需要你在云浏览器里完成一次登录。</p></div><div><span class="badge part">部分可用</span></div></div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="lang-en"><h2 class="sec">While you sleep</h2><p class="secsub">Scheduled jobs currently running.</p>
+    <div class="cron"><div class="when">Daily · ~7:10am ET</div><h3>Agentic Radar digest</h3><p>Collects the day's agentic-AI news, builds the poster infographic and the site page, deploys to feedos.si.</p></div>
+    <div class="cron"><div class="when">Daily · ~9:10am ET</div><h3>Agentic Radar reflection</h3><p>Reviews yesterday's digest for errors and improves the pipeline (this is how the poster got its date fix and recall lock).</p></div>
+  </div>
+  <div class="lang-zh" style="display:none"><h2 class="sec">在你睡觉时运行</h2><p class="secsub">正在运行的定时任务。</p>
+    <div class="cron"><div class="when">每天 · 约早上 7:10（美东）</div><h3>Agentic Radar 日报</h3><p>收集当天的智能体新闻，生成海报信息图和网站页面，部署到 feedos.si。</p></div>
+    <div class="cron"><div class="when">每天 · 约早上 9:10（美东）</div><h3>Agentic Radar 复盘</h3><p>回顾昨天的日报找问题、改进流程（海报的日期修复和引用锁定就是这么来的）。</p></div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="lang-en"><h2 class="sec">Available on request</h2><p class="secsub">Skills exist — connect one whenever you need it.</p>
+    <div class="tagrow"><span class="tag">Google Calendar</span><span class="tag">Linear</span><span class="tag">Spotify</span><span class="tag">Instagram</span><span class="tag">Threads</span><span class="tag">Messenger</span><span class="tag">Dropbox</span><span class="tag">Google Drive / Docs / Sheets</span><span class="tag">Canva</span><span class="tag">Figma</span></div>
+  </div>
+  <div class="lang-zh" style="display:none"><h2 class="sec">需要时可接</h2><p class="secsub">skill 都有——需要时再接通。</p>
+    <div class="tagrow"><span class="tag">Google Calendar</span><span class="tag">Linear</span><span class="tag">Spotify</span><span class="tag">Instagram</span><span class="tag">Threads</span><span class="tag">Messenger</span><span class="tag">Dropbox</span><span class="tag">Google Drive / Docs / Sheets</span><span class="tag">Canva</span><span class="tag">Figma</span></div>
+  </div>
+</section>
+
+<div class="back"><a href="index.html">← back to fun facts</a></div>
+
+</main>
+
+<footer>
+  <div class="lang-en">Toolbox · Oct 7, 2026 · tell me what to add, connect, or retire.</div>
+  <div class="lang-zh" style="display:none">工具箱 · 2026年10月7日 · 想加、想接、想下掉什么，直接告诉我。</div>
+</footer>
+
+<script>
+function setLang(l) {
+  document.querySelectorAll('.lang-en').forEach(function(e){ e.style.display = (l === 'en') ? '' : 'none'; });
+  document.querySelectorAll('.lang-zh').forEach(function(e){ e.style.display = (l === 'zh') ? '' : 'none'; });
+  document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.lang === l); });
+  document.documentElement.lang = (l === 'zh') ? 'zh-CN' : 'en';
+  document.body.lang = (l === 'zh') ? 'zh-CN' : 'en';
+}
+</script>
+
+</body>
+</html>
