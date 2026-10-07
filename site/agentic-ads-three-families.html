@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agentic Advertising: Three Families, One Scoreboard</title>
+<meta name="description" content="A visual explainer of the three families of agentic advertising — where the hype is vs where the money is.">
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: Georgia, 'Times New Roman', serif; background: #f7f2e9; color: #2b2620; margin: 0; padding: 0; line-height: 1.7; }
+  header { text-align: center; padding: 56px 20px 20px; max-width: 900px; margin: 0 auto; }
+  header .kicker { font-size: .8rem; letter-spacing: 3px; color: #b39b6d; text-transform: uppercase; }
+  header h1 { font-size: 2.1rem; margin: 10px 0 8px; letter-spacing: -0.5px; line-height: 1.25; }
+  header p.sub { color: #8a7f6d; font-style: italic; margin: 0; }
+  main { max-width: 900px; margin: 0 auto; padding: 10px 20px 64px; }
+  .tldr { background: #fffdf8; border: 2px solid #d8cba8; border-radius: 14px; padding: 22px 26px; margin: 26px 0 34px; box-shadow: 0 2px 10px rgba(90,70,40,.06); }
+  .tldr h2 { margin: 0 0 10px; font-size: 1.1rem; }
+  .tldr p { margin: 8px 0; }
+  .tldr .zh { color: #6b5f4c; font-size: .95rem; border-top: 1px dashed #e8dfcd; padding-top: 10px; margin-top: 12px; }
+  section.card { background: #fffdf8; border: 1px solid #e8dfcd; border-radius: 14px; padding: 24px 28px; margin: 22px 0; box-shadow: 0 2px 10px rgba(90,70,40,.06); }
+  h2.sec { font-size: 1.35rem; margin: 0 0 12px; }
+  h3 { font-size: 1.08rem; margin: 20px 0 8px; color: #4a3f2e; }
+  p, li { color: #4d4436; }
+  ul, ol { padding-left: 22px; }
+  li { margin: 7px 0; }
+  .verdict { background: #f0f7ee; border: 1px solid #cfe3c8; border-radius: 10px; padding: 16px 20px; margin: 16px 0; }
+  .verdict strong { color: #2f6b2a; }
+  .warn { background: #fdf3e7; border: 1px solid #ecd9b8; border-radius: 10px; padding: 16px 20px; margin: 16px 0; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .88em; background: #f1ead9; padding: 1px 6px; border-radius: 4px; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: .9rem; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid #e8dfcd; vertical-align: top; }
+  th { background: #f5efe0; font-family: ui-sans-serif, system-ui; font-size: .78rem; letter-spacing: .5px; }
+  .badge { display: inline-block; font-family: ui-sans-serif, system-ui; font-size: .7rem; font-weight: 800; letter-spacing: .8px; border-radius: 20px; padding: 2px 11px; text-transform: uppercase; white-space: nowrap; }
+  .real { background: #e3f3e9; color: #1e7f43; }
+  .early { background: #e8eefb; color: #1c5fd6; }
+  .jazz { background: #f3e8f7; color: #7b2d8b; }
+  .fama { background: #e0f2f1; color: #0e7d7b; }
+  .famb { background: #e8eefb; color: #1c5fd6; }
+  .famc { background: #fdeeda; color: #c96a12; }
+  /* bar chart */
+  .chart { margin: 18px 0 6px; }
+  .bar-row { display: flex; align-items: center; margin: 9px 0; font-size: .88rem; }
+  .bar-label { flex: 0 0 210px; text-align: right; padding-right: 12px; color: #4d4436; }
+  .bar-track { flex: 1; background: #f1ead9; border-radius: 6px; height: 26px; position: relative; }
+  .bar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; font-family: ui-sans-serif, system-ui; font-size: .72rem; font-weight: 700; color: #fff; min-width: 44px; }
+  .chart-note { font-size: .8rem; color: #8a7f6d; font-style: italic; margin-top: 8px; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin: 12px 0 4px; font-size: .82rem; font-family: ui-sans-serif, system-ui; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .dot { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+  footer { text-align: center; color: #8a7f6d; font-size: .85rem; padding: 0 20px 48px; font-style: italic; }
+  footer a { color: #8a7f6d; }
+  a { color: #0a66c2; }
+  .back { text-align: center; margin: 30px 0 10px; font-family: ui-sans-serif, system-ui; font-size: .9rem; }
+  .fam-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 16px 0; }
+  .fam-card { border-radius: 12px; padding: 18px 20px; border: 1px solid #e8dfcd; background: #fffdf8; }
+  .fam-card h3 { margin: 8px 0 6px; font-size: 1.02rem; }
+  .fam-card p { font-size: .88rem; margin: 6px 0; }
+  .fam-card .money { font-family: ui-sans-serif, system-ui; font-size: .8rem; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">Research explainer · advertising</div>
+  <h1>Agentic Advertising: Three Families, One Scoreboard</h1>
+  <p class="sub">Everyone at Ad Week says "agentic." Almost nobody is paying for the part they're talking about. Here's where the money actually is.</p>
+</header>
+
+<main>
+
+<div class="tldr">
+  <h2>TL;DR</h2>
+  <p>The word "agentic" in advertising means ~12 different things. Sorted into three families — <strong>A: AI doing the work</strong>, <strong>B: AI as a place to run ads</strong>, <strong>C: AI as the customer</strong> — and scored by whether real budgets (disclosed, ~$100M+/yr) have arrived, the picture flips the hype: the obsession, <em>agents buying media from other agents</em>, is still pilots and forecasts, while billions already flow through AI production tools and the platforms' own campaign automation — systems nobody bothers to call "agentic."</p>
+  <p><strong>The pattern to watch:</strong> in every use case with real budgets, one company controls the whole loop — the data, the definition of success, the measurement, and the off switch.</p>
+  <p class="zh"><strong>中文摘要：</strong>广告行业的 "agentic" 约有十几种含义，可归为三类：<strong>A：AI 干活</strong>（生产、投放优化）、<strong>B：AI 作为广告位</strong>（在 AI 产品里投广告）、<strong>C：AI 作为消费者</strong>（AI 替人购物）。按真实预算打分后发现：被热炒的"agent 之间互相买量"还停留在试点阶段，而真正的钱流向了 AI 生产工具和平台自家的自动化投放（Meta Advantage+ 年化超 $750 亿）。规律：所有真正赚钱的场景，都是同一家公司掌控数据、衡量标准和开关。</p>
+</div>
+
+<section class="card">
+  <h2 class="sec">1. The scoreboard — disclosed budgets</h2>
+  <p>Every number below is a disclosed figure from the article. Note the scale: the chart is logarithmic, because the biggest bar is ~2,000× the smallest.</p>
+  <div class="chart">
+    <div class="bar-row"><div class="bar-label">Meta Advantage+ (AI campaigns)</div><div class="bar-track"><div class="bar-fill" style="width:96.4%;background:#1c5fd6">$75B run rate</div></div></div>
+    <div class="bar-row"><div class="bar-label">Search ads next to AI Overviews</div><div class="bar-track"><div class="bar-fill" style="width:83.5%;background:#1c5fd6">$26.4B</div></div></div>
+    <div class="bar-row"><div class="bar-label">ChatGPT ads</div><div class="bar-track"><div class="bar-fill" style="width:42.9%;background:#0e7d7b">$1B run rate</div></div></div>
+    <div class="bar-row"><div class="bar-label">Higgsfield (AI video production)</div><div class="bar-track"><div class="bar-fill" style="width:42.9%;background:#0e7d7b">$1B annualized</div></div></div>
+    <div class="bar-row"><div class="bar-label">Adobe AI-first products</div><div class="bar-track"><div class="bar-fill" style="width:37.5%;background:#0e7d7b">$650M ARR</div></div></div>
+    <div class="bar-row"><div class="bar-label">Semrush AI products</div><div class="bar-track"><div class="bar-fill" style="width:14%;background:#c96a12">$38M ARR</div></div></div>
+    <div class="bar-row"><div class="bar-label">Agent-to-agent media buying</div><div class="bar-track"><div class="bar-fill" style="width:14%;background:#7b2d8b">pilots only</div></div></div>
+  </div>
+  <div class="legend">
+    <span><i class="dot" style="background:#1c5fd6"></i>Family A — platform automation</span>
+    <span><i class="dot" style="background:#0e7d7b"></i>Family A — production tools / Family B — AI inventory</span>
+    <span><i class="dot" style="background:#c96a12"></i>Family C — early</span>
+    <span><i class="dot" style="background:#7b2d8b"></i>The hyped one — no disclosed revenue</span>
+  </div>
+  <p class="chart-note">Log scale. AI Overviews figure = 82.5% of eMarketer's $32B US AI-related ad spend estimate for 2026. Semrush figure pre-dates Adobe's acquisition.</p>
+</section>
+
+<section class="card">
+  <h2 class="sec">2. The three families at a glance</h2>
+  <div class="fam-grid">
+    <div class="fam-card">
+      <span class="badge fama">Family A</span>
+      <h3>AI doing the work</h3>
+      <p>AI performs steps of advertising work people used to do — research, creative, planning, buying, optimization.</p>
+      <p class="money" style="color:#1e7f43">◉ Real budgets: production tools + platform automation</p>
+    </div>
+    <div class="fam-card">
+      <span class="badge famb">Family B</span>
+      <h3>AI as a place to run ads</h3>
+      <p>Brands pay to appear inside or next to an AI product consumers use.</p>
+      <p class="money" style="color:#1e7f43">◉ Real budgets: AI Overviews ads, ChatGPT ads</p>
+    </div>
+    <div class="fam-card">
+      <span class="badge famc">Family C</span>
+      <h3>AI as the customer</h3>
+      <p>An agent researches or buys on a consumer's behalf; brands must persuade <em>it</em>.</p>
+      <p class="money" style="color:#c96a12">◉ Early — "impression is not an impression if seen by no human eye"</p>
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <h2 class="sec">3. Maturity matrix — every use case, scored</h2>
+  <p>Rating key: <span class="badge real">real budgets</span> disclosed revenue/spend ≈$100M+/yr &nbsp;<span class="badge early">early</span> real usage or pilots, no disclosed money at scale &nbsp;<span class="badge jazz">jazz hands</span> talk ahead of evidence</p>
+  <table>
+    <tr><th>Use case</th><th>Family</th><th>Rating</th><th>Evidence</th></tr>
+    <tr><td>Insight &amp; research</td><td><span class="badge fama">A</span></td><td><span class="badge early">early</span></td><td>70% of agencies use AI for research (Forrester/4As); 72% of brands (WFA). A person still decides; no spend disclosed.</td></tr>
+    <tr><td>Strategy &amp; the brief</td><td><span class="badge fama">A</span></td><td><span class="badge early">early</span></td><td>WPP strategy agents; 48% of brands use AI for planning (WFA).</td></tr>
+    <tr><td>Creative ideation</td><td><span class="badge fama">A</span></td><td><span class="badge early">early</span></td><td>Monks: 50 on-brief ideas in 10 minutes. 58% of marketers worry AI makes creative look the same.</td></tr>
+    <tr><td>Production &amp; versioning</td><td><span class="badge fama">A</span></td><td><span class="badge real">real budgets</span></td><td>Higgsfield: $1B annualized (Sept). Adobe AI-first: $650M ARR, +150%/yr.</td></tr>
+    <tr><td>Media planning</td><td><span class="badge fama">A</span></td><td><span class="badge early">early</span></td><td>IAB Tech Lab reference buyer agent has a "Portfolio Manager" behind human approval gates; 29% of agencies use AI planning (Basis). No disclosed agent-planned spend.</td></tr>
+    <tr><td>Activation &amp; optimization inside platforms</td><td><span class="badge fama">A</span></td><td><span class="badge real">real budgets</span></td><td>Meta Advantage+: $75B+ run rate. Google AI Max: 500k advertisers. Amazon Ads Agent now the default.</td></tr>
+    <tr><td>Advertiser's own agents on platforms</td><td><span class="badge fama">A</span></td><td><span class="badge early">early</span></td><td>X opened ad tools to outside agents (campaigns start paused). Fluency: its LLM never touches live spend across ~$3B managed.</td></tr>
+    <tr><td>Measurement</td><td><span class="badge fama">A</span></td><td><span class="badge early">early</span></td><td>48% use predictive AI for measurement (Digiday); 30% report significant measurable results.</td></tr>
+    <tr><td>Search ads beside AI answers</td><td><span class="badge famb">B</span></td><td><span class="badge real">real budgets</span></td><td>82.5% of $32B US AI-related ad spend (eMarketer, 2026). No agent involved — plain search ads.</td></tr>
+    <tr><td>Ads inside AI assistants</td><td><span class="badge famb">B</span></td><td><span class="badge real">real budgets</span></td><td>ChatGPT ads: $1B run rate (Aug), tens of thousands of advertisers. Perplexity stopped testing (Feb).</td></tr>
+    <tr><td>The ad is itself an agent</td><td><span class="badge famb">B</span></td><td><span class="badge early">early</span></td><td>OpenAI testing sponsored agents; Amazon branded conversations launching Jan 2027 US. No disclosed spend.</td></tr>
+    <tr><td>Getting recommended by AI</td><td><span class="badge famc">C</span></td><td><span class="badge early">early</span></td><td>73% of brands monitor AI answers; only 8% have a clear strategy (WFA). Semrush AI: $38M ARR pre-acquisition.</td></tr>
+    <tr><td>Selling through an AI agent</td><td><span class="badge famc">C</span></td><td><span class="badge jazz">jazz hands</span></td><td>OpenAI moved checkout back to merchants (March) — shoppers research in ChatGPT, buy elsewhere.</td></tr>
+    <tr><td>Buying &amp; selling between companies</td><td><span class="badge fama">A</span></td><td><span class="badge early">early</span></td><td>PubMatic: 80+ fully autonomous campaigns, 4,000+ AI deals (no revenue split). One test: two agents negotiated ~$10k audio media over 4 weeks. Magnite CEO: 2027 agentic DSP estimates range from "no meaningful adoption" to $600–700M — "relatively modest" even at the high end.</td></tr>
+  </table>
+</section>
+
+<section class="card">
+  <h2 class="sec">4. Why the hype and the money are in different places</h2>
+  <h3>The accountability gap</h3>
+  <p>Nobody has settled who takes the fall when a buying agent puts a brand somewhere unsafe — and there's no case of it happening <em>yet</em>. But the warning signs are in:</p>
+  <ul>
+    <li>IAB Tech Lab's own reference agents <strong>hallucinated ad prices</strong> in early tests — "fabricated CPM values when pricing data was missing."</li>
+    <li>DataBeat (June): agentic DSPs entered <strong>86% fewer auctions</strong> than conventional DSPs, clearing at $6.13 vs $6.95 CPMs — selectivity with unknown payoff.</li>
+    <li>Platform automation already produced the brand-safety scandals: Adalytics found Google automated campaigns on porn/piracy/sanctioned sites (2023) and Amazon DSP + Google ads on illegal-content hosting (2025). The brands' names were on the screenshots.</li>
+    <li>OpenAI's ad terms leave the remedy to OpenAI: a makegood or credit "in its sole discretion" is "your sole remedy." IAB Europe asked who is accountable for AI-driven spend: of 27 respondents who named someone, 12 said the tool user, 8 weren't sure.</li>
+  </ul>
+  <h3>The standards race is unsettled</h3>
+  <p>Buyers and sellers haven't agreed how agents connect: AdCP launched Oct 2025 (Scope3, Yahoo, PubMatic; core stable in v3.2), IAB Tech Lab's broader AAMP named in February — with 13 overlapping business functions between them. Two competing protocols this early means nobody's building production on either yet.</p>
+  <h3>The incentive problem</h3>
+  <p>One practitioner told the author: describing his real, working automation doesn't win budget — describing the jazz hands does. Senior agency people say agentic buying is happening; the people who actually run campaigns say nothing is happening. The author's test for any pitch: <em>who is doing it today, with how much money, and what would have to be true for it to grow beyond a test budget?</em></p>
+</section>
+
+<section class="card">
+  <h2 class="sec">5. The pattern to watch</h2>
+  <div class="verdict">
+    <strong>In every use case with real budgets, one company controls the whole loop</strong> — the data, the definition of success, the measurement, and the off switch. Meta, Google, Amazon: their systems act autonomously inside their own walls and report their own results. Cross-company agent buying needs those pieces <em>shared</em> across buyer, seller, and measurer — which is exactly what hasn't been solved.
+  </div>
+  <p>Related signals since the article (Oct 2026):</p>
+  <ul>
+    <li><strong>Measurement rails arriving for Family B:</strong> DoubleVerify launched attribution for ChatGPT ads (via Rockerbox); IAS joined as a media-quality partner in closed pilot. Independent measurement is what turns an experiment into a budget line.</li>
+    <li><strong>TikTok's ad network opened to US advertisers</strong> (~400k third-party apps of inventory via TikTok Ads Manager, IAS-measured) with an agentic push — conversational Shopping Assistant, Agentic Leads — plus an MCP letting marketers plug their own agents into TikTok's ads ecosystem.</li>
+    <li><strong>Family B formats expanding:</strong> OpenAI testing sponsored agents; Amazon branded conversations set for Jan 2027 US launch.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2 class="sec">6. The Feedmap angle</h2>
+  <ul>
+    <li><strong>Promo-video production sits in Family A's hottest budget zone.</strong> AI production/versioning is one of only two Family A use cases with real disclosed budgets — the work Feedmap already does with AI-generated video is the thing advertisers are demonstrably paying for.</li>
+    <li><strong>Family C is the strategic bet under FeedEra.</strong> "AI as the customer" — agents researching and buying on consumers' behalf — is early today (8% of brands have a strategy). Early is another word for cheap land: the companies that build for agent-customers now own the position when the behavior arrives.</li>
+    <li><strong>Watch the accountability answer.</strong> Whoever solves "who takes the fall" for agent-driven spend — technically and contractually — unlocks the agent-to-agent buying market. Until then, it stays in pilots.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2 class="sec">7. Sources</h2>
+  <ul>
+    <li>Primary: <a href="https://www.linkedin.com/pulse/agentic-means-three-different-jobs-advertising-ad-week-brownstein-bbj0c">"'Agentic' means three different jobs in advertising" (LinkedIn pulse)</a> — all figures above are from this piece unless noted.</li>
+    <li>Related: DoubleVerify / IAS ChatGPT-ads measurement (Oct 2026); TikTok Ad Network US launch, Advertising Week New York (Oct 2026); IAB Tech Lab AAMP; AdCP v3.2.</li>
+  </ul>
+</section>
+
+<div class="back"><a href="index.html">← back to fun facts</a></div>
+
+</main>
+
+<footer>
+  Explainer built Oct 6, 2026 · from the LinkedIn article + related industry signals · for the Feedmap team.
+</footer>
+
+</body>
+</html>
