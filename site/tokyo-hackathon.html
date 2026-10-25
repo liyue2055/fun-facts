@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team Hackathon: Tokyo — The City Is the Dataset</title>
+<meta name="description" content="Feedmob team hackathon in Tokyo: build with the city itself — its trains, sounds, stories, terrain and streets. Bilingual.">
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: Georgia, 'Times New Roman', serif; background: #f7f2e9; color: #2b2620; margin: 0; padding: 0; line-height: 1.75; }
+  body:lang(zh-CN) { font-family: "Noto Serif SC", "Songti SC", Georgia, serif; }
+  header { text-align: center; padding: 48px 20px 20px; max-width: 900px; margin: 0 auto; }
+  header .kicker { font-size: .8rem; letter-spacing: 3px; color: #b39b6d; text-transform: uppercase; }
+  header h1 { font-size: 2rem; margin: 10px 0 8px; letter-spacing: -0.5px; line-height: 1.3; }
+  header p.sub { color: #8a7f6d; font-style: italic; margin: 0 0 18px; }
+  .lang-toggle { display: inline-flex; border: 1px solid #d8cba8; border-radius: 30px; overflow: hidden; background: #fffdf8; }
+  .lang-btn { font-family: ui-sans-serif, system-ui; font-size: .85rem; font-weight: 700; padding: 8px 22px; border: none; background: transparent; color: #8a7f6d; cursor: pointer; }
+  .lang-btn.active { background: #1b1e26; color: #fff; }
+  main { max-width: 900px; margin: 0 auto; padding: 10px 20px 64px; }
+  .tldr { background: #fffdf8; border: 2px solid #d8cba8; border-radius: 14px; padding: 22px 26px; margin: 26px 0 34px; box-shadow: 0 2px 10px rgba(90,70,40,.06); }
+  .tldr h2 { margin: 0 0 10px; font-size: 1.1rem; }
+  .tldr p { margin: 8px 0; }
+  section.card { background: #fffdf8; border: 1px solid #e8dfcd; border-radius: 14px; padding: 24px 28px; margin: 22px 0; box-shadow: 0 2px 10px rgba(90,70,40,.06); }
+  h2.sec { font-size: 1.35rem; margin: 0 0 12px; }
+  h3 { font-size: 1.08rem; margin: 20px 0 8px; color: #4a3f2e; }
+  p, li { color: #4d4436; }
+  ul, ol { padding-left: 22px; }
+  li { margin: 8px 0; }
+  .action { border-left: 4px solid #1c5fd6; background: #f6f9ff; border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 14px 0; }
+  .action h3 { margin: 0 0 6px; font-size: 1.02rem; color: #1b1e26; }
+  .action p { margin: 6px 0; font-size: .95rem; }
+  .badge { display: inline-block; font-family: ui-sans-serif, system-ui; font-size: .7rem; font-weight: 800; letter-spacing: .8px; border-radius: 20px; padding: 2px 11px; text-transform: uppercase; white-space: nowrap; }
+  .b-see { background: #e8e0f5; color: #5b3ea8; }
+  .b-hear { background: #fdeeda; color: #c96a12; }
+  .b-move { background: #e0f2f1; color: #0e7d7b; }
+  .b-read { background: #fde8ef; color: #b02a5e; }
+  .b-stand { background: #e6f0e0; color: #4a7a2f; }
+  .tracks { list-style: none; padding-left: 0; }
+  .tracks li { margin: 12px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: .92rem; margin: 12px 0; }
+  th, td { border: 1px solid #e8dfcd; padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: #f3ecdc; color: #4a3f2e; }
+  td { color: #4d4436; }
+  a { color: #1c5fd6; }
+  footer { text-align: center; color: #8a7f6d; font-size: .85rem; padding: 0 20px 40px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="kicker">Feedmob Team Hackathon · Tokyo 2026</div>
+  <h1>
+    <span class="lang-en">The City Is the Dataset</span>
+    <span class="lang-zh" style="display:none">城市即数据集</span>
+  </h1>
+  <p class="sub">
+    <span class="lang-en">A team hackathon in Tokyo — build with the city itself: its trains, sounds, stories, terrain and streets.</span>
+    <span class="lang-zh" style="display:none">东京团队黑客松——用这座城市本身来创作：它的列车、声音、故事、地形与街道。</span>
+  </p>
+  <div class="lang-toggle">
+    <button class="lang-btn active" data-lang="en" onclick="setLang('en')">English</button>
+    <button class="lang-btn" data-lang="zh" onclick="setLang('zh')">中文</button>
+  </div>
+</header>
+<main>
+
+  <div class="tldr">
+    <h2><span class="lang-en">The brief</span><span class="lang-zh" style="display:none">简报</span></h2>
+    <p class="lang-en">During our Tokyo stay, we run our own hackathon. One theme: <strong>Tokyo as data</strong>. Five tracks — See, Hear, Move, Read, Stand. Every team goes out into the city, collects something real, and builds with AI on top of it. The judging lens: <strong>only possible in Tokyo × only possible with AI</strong>.</p>
+    <p class="lang-zh" style="display:none">在东京停留期间，我们举办一场属于自己的黑客松。主题只有一个：<strong>把东京当作数据</strong>。五个赛道——看、听、行、读、立。每支队伍都要走进城市，实地采集真实素材，再用 AI 在其上构建作品。评审标准：<strong>只有在东京才能做 × 只有用 AI 才能做</strong>。</p>
+  </div>
+
+  <section class="card">
+    <h2 class="sec"><span class="lang-en">Five tracks</span><span class="lang-zh" style="display:none">五个赛道</span></h2>
+    <ul class="tracks">
+      <li><span class="badge b-see">See</span>
+        <span class="lang-en"><strong>Vision.</strong> Match, overlay, and verify — photos against woodblock prints, anime frames, and old maps.</span>
+        <span class="lang-zh" style="display:none"><strong>视觉。</strong>比对、叠加与验证——让照片与浮世绘、动漫画格、老地图对话。</span></li>
+      <li><span class="badge b-hear">Hear</span>
+        <span class="lang-en"><strong>Sound.</strong> Record, identify, and generate the city's sounds — starting with station melodies that are disappearing.</span>
+        <span class="lang-zh" style="display:none"><strong>声音。</strong>录制、识别与生成这座城市的声音——从正在消失的车站发车音乐开始。</span></li>
+      <li><span class="badge b-move">Move</span>
+        <span class="lang-en"><strong>Live transit.</strong> Tokyo's trains as a live game board and utility layer, on open data (ODPT).</span>
+        <span class="lang-zh" style="display:none"><strong>出行。</strong>以开放数据（ODPT）驱动，把东京的列车变成实时的游戏棋盘与实用工具层。</span></li>
+      <li><span class="badge b-read">Read</span>
+        <span class="lang-en"><strong>Language.</strong> Place names, novels, folk tales, and signs — pinned to coordinates.</span>
+        <span class="lang-zh" style="display:none"><strong>文字。</strong>把地名、小说、民间传说与招牌，钉在地图的坐标上。</span></li>
+      <li><span class="badge b-stand">Stand</span>
+        <span class="lang-en"><strong>Terrain &amp; layers.</strong> Elevation, buried rivers, Edo-era land use: the history under your feet.</span>
+        <span class="lang-zh" style="display:none"><strong>地形。</strong>海拔、暗渠（被掩埋的河流）、江户时代的土地用途：脚下的历史。</span></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2 class="sec"><span class="lang-en">House rules</span><span class="lang-zh" style="display:none">基本规则</span></h2>
+    <ol>
+      <li><span class="lang-en"><strong>Field rule.</strong> Every team must physically collect something in the city — recordings, photos, stamps, a walked route — and build on what they collected. Laptops alone don't count.</span>
+        <span class="lang-zh" style="display:none"><strong>实地规则。</strong>每支队伍必须亲自在城市里采集素材——录音、照片、印章、一条走过的路线——并基于采集成果进行开发。只坐在电脑前不算。</span></li>
+      <li><span class="lang-en"><strong>Shared base first.</strong> In the first two hours, one group builds the shared <em>Tokyo Graph</em> layer (below) that every team consumes. No team should burn half the hackathon on data plumbing.</span>
+        <span class="lang-zh" style="display:none"><strong>共享基础优先。</strong>头两个小时，由一组人搭建下方共享的"东京图谱"数据层，供所有队伍调用。不要让任何队伍把一半时间耗在数据管道上。</span></li>
+      <li><span class="lang-en"><strong>Demo lens.</strong> At demo time, two questions decide it: could this only be built in Tokyo? Could this only be built with AI?</span>
+        <span class="lang-zh" style="display:none"><strong>评审视角。</strong>演示时只看两个问题——这件作品是否只有在东京才能做？是否只有用 AI 才能做？</span></li>
+    </ol>
+  </section>
+
+  <section class="card">
+    <h2 class="sec"><span class="lang-en">Recommended flagships</span><span class="lang-zh" style="display:none">推荐旗舰选题</span></h2>
+
+    <div class="action">
+      <h3><span class="badge b-hear">Hear</span>
+        <span class="lang-en">1 · The Vanishing Soundtrack</span>
+        <span class="lang-zh" style="display:none">1 · 正在消失的声音</span></h3>
+      <p class="lang-en">Every Tokyo station has its own departure melody (<em>eki-melo</em>); many were composed by Minoru Mukaiya. They are now being retired as JR East converts lines to one-operator trains — the Nambu Line and Joban Local went silent in March 2025, and more lines follow in 2026. Build an iPhone app that knows where you are, plays and records your station's melody, and identifies melodies from crowd-sourced clips with audio classification: an open archive of a soundscape with an expiry date. Stretch goal: generate a melody "in the style of" for a station that never had one.</p>
+      <p class="lang-zh" style="display:none">东京每个车站都有自己的发车音乐（駅メロ），许多出自作曲家向谷实之手。随着 JR 东日本推行单人驾驶，这些旋律正在被逐步取消——南武线与常磐线已于 2025 年 3 月静默，2026 年还会有更多线路跟进。做一个 iPhone 应用：它知道你在哪座车站，能播放并录制该站的旋律，并用音频分类从众人上传的片段中识别旋律——为这片有保质期的声音景观建立开放档案。进阶目标：为从未有过旋律的车站，按其风格生成一首。</p>
+    </div>
+
+    <div class="action">
+      <h3><span class="badge b-stand">Stand</span>
+        <span class="lang-en">2 · Ghost Rivers</span>
+        <span class="lang-zh" style="display:none">2 · 幽灵河流</span></h3>
+      <p class="lang-en">Edo was a city of water — over a hundred rivers and canals. Most were filled or covered after the war and for the 1964 Olympics; the Shibuya River still flows <em>underneath</em> the Scramble crossing. Build a walking app: follow a buried river's course on today's streets while the map shows the old waterway, bridges appear as fossils of the water map, and an agent narrates what each block was when it was a canal. Data: Edo maps (Rekichizu, CODH), GSI elevation, OpenStreetMap. The demo starts at Shibuya station.</p>
+      <p class="lang-zh" style="display:none">江户曾是一座水城——一百多条河流与运河纵横交错。战后及 1964 年奥运会期间，它们大多被填埋或覆盖；涩谷川至今仍在涩谷十字路口的<em>地下</em>流淌。做一个步行应用：沿着被掩埋的河流在今天的街道上行走，地图上浮现旧河道，桥梁成为水系地图的化石，AI 智能体讲述每个街区还是运河时的故事。数据：江户地图（Rekichizu、CODH）、国土地理院海拔数据、OpenStreetMap。演示就从涩谷站开始。</p>
+    </div>
+
+    <div class="action">
+      <h3><span class="badge b-see">See</span>
+        <span class="lang-en">3 · Seichi Sync</span>
+        <span class="lang-zh" style="display:none">3 · 圣地巡礼同步</span></h3>
+      <p class="lang-en">Anime pilgrimage (<em>seichi junrei</em>) is an official tourism category — the Anime Tourism Association publishes the numbered "88 Anime Spots" list, and Tokyo's entries include the <em>Your Name</em> stairs at Suga Shrine, Kanda Myojin (<em>Love Live!</em>), and Shinjuku Gyoen (<em>The Garden of Words</em>). Build the AI version: at a spot, a vision model overlays the anime frame on your camera view and scores how precisely your shot reproduces it — angle, framing, light — and an agent then routes you through one series' Tokyo.</p>
+      <p class="lang-zh" style="display:none">圣地巡礼已是官方旅游类别——动画旅游协会发布了编号的《日本动画圣地 88 选》，东京的条目包括须贺神社的《你的名字。》台阶、神田明神（《Love Live!》）、新宿御苑（《言叶之庭》）。做 AI 版本：到达取景地后，视觉模型把动画画面叠加到你的取景框上，并为你的拍摄还原度打分（角度、构图、光线）；智能体再为你规划一条贯穿某部作品东京取景地的路线。</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 class="sec"><span class="lang-en">Idea bank</span><span class="lang-zh" style="display:none">选题库</span></h2>
+    <ul>
+      <li><span class="lang-en"><strong>Hyakki Yagyō Go</strong> — a geofenced yokai hunt: at each legend site (Masakado's head mound in Ōtemachi, Oiwa Inari in Yotsuya, the Seven Wonders of Honjō in Sumida), an LLM tells that site's tale in character, and AR puts the yokai on the street. Data: Nichibunken Kaii-Yōkai database, OpenStreetMap.</span>
+        <span class="lang-zh" style="display:none"><strong>百鬼夜行 Go</strong>——基于地理围栏的妖怪狩猎：在每个传说地点（大手町的平将门首冢、四谷的于岩稻荷、墨田的本所七大不可思议），大模型以角色口吻讲述该地的故事，AR 把妖怪放上街头。数据：日文研"怪异·妖怪传说数据库"、OpenStreetMap。</span></li>
+      <li><span class="lang-en"><strong>Time Slider Tokyo</strong> — drag a slider from Edo to 1945 to today across the same block; tap anywhere and ask "what was here?", answered from CODH place names and Japan Search records.</span>
+        <span class="lang-zh" style="display:none"><strong>东京时间滑杆</strong>——在同一街区上拖动滑杆：江户 → 1945 → 今天；点任意位置提问"这里曾经是什么？"，答案来自 CODH 地名数据与 Japan Search 记录。</span></li>
+      <li><span class="lang-en"><strong>Hiroshige Then &amp; Now</strong> — geolocate all of the <em>100 Famous Views of Edo</em>, open each in Street View or 3D Tiles from Hiroshige's angle, overlay the print on your camera and let a vision model score the match. Side product: the first open GeoJSON dataset of the series.</span>
+        <span class="lang-zh" style="display:none"><strong>广重今昔</strong>——为《名所江户百景》全部定位，从广重的角度打开街景或 3D 瓦片，把版画叠加到取景框上，由视觉模型为还原度打分。副产品：该系列第一份开放 GeoJSON 数据集。</span></li>
+      <li><span class="lang-en"><strong>Two Cities</strong> — Yamanote vs Shitamachi: Edo put the samurai on the hills and the merchants on the reclaimed marshland, and the divide is still legible. The app reads your elevation and Edo land use and tells you which Edo you're standing in — and today's flood risk on the same low ground.</span>
+        <span class="lang-zh" style="display:none"><strong>两座城市</strong>——山手 vs 下町：江户把武士安置在高地，把商人安置在填海的湿地上，这道分界至今清晰可辨。应用读取你所在位置的海拔与江户土地用途，告诉你正站在哪个"江户"——以及同一片低地今天的洪水风险。</span></li>
+      <li><span class="lang-en"><strong>Sanshiro's Tokyo</strong> — the universities angle: Tokyo's campuses sit on daimyo estates. The University of Tokyo's Sanshiro Pond is a 1638 Maeda-clan garden pond, renamed by Soseki's novel. Walk the novels with passages read aloud at the real spots, RAG over public-domain texts from Aozora Bunko.</span>
+        <span class="lang-zh" style="display:none"><strong>三四郎的东京</strong>——大学的角度：东京的校园大多建在大名宅邸之上。东京大学的三四郎池原是 1638 年前田家花园之池，因夏目漱石的小说得名。行走于小说之间，在真实地点朗读原文，基于青空文库的公版文本做 RAG。</span></li>
+      <li><span class="lang-en"><strong>Digital Eki-Stamp Rally</strong> — station stamps are goshuin culture for railways (JR East's EKITAG already does NFC stamps at 1,235 stations). Team version: collect by GPS/NFC, and an image model designs your personal stamp for each station from its local symbols.</span>
+        <span class="lang-zh" style="display:none"><strong>数字车站印章拉力赛</strong>——车站印章是铁路版的御朱印文化（JR 东日本的 EKITAG 已在 1,235 座车站提供 NFC 数字印章）。团队版：以 GPS/NFC 收集印章，图像模型根据每座车站的在地符号，为你设计专属印章。</span></li>
+      <li><span class="lang-en"><strong>Station Spirits / Last Train Panic</strong> — live trains in 3D (fork Mini Tokyo 3D) plus the story behind each station's name (Toranomon = "Tiger Gate", Ochanomizu = "tea water"); or the game version: race the real last-train timetable to get home.</span>
+        <span class="lang-zh" style="display:none"><strong>车站精灵 / 末班车大逃亡</strong>——实时 3D 列车（fork Mini Tokyo 3D）加车站名溯源（虎之门、御茶之水）；或游戏版：与真实的末班车时刻表赛跑回家。</span></li>
+      <li><span class="lang-en"><strong>Tokyo Survive</strong> — PLATEAU 3D plus hazard layers: replay the 1923 Great Kantō earthquake or simulate a flood, and let an AI coach walk you to the nearest evacuation site.</span>
+        <span class="lang-zh" style="display:none"><strong>东京生存</strong>——PLATEAU 3D + 灾害图层：重演 1923 年关东大地震、模拟洪水，由 AI 教练带你步行到最近的避难场所。</span></li>
+      <li><span class="lang-en"><strong>3D Tiles Time Game</strong> (web) — built on Google's open-source 3D Tiles solutions: "Here is a 1910 photograph — find this exact spot in today's photorealistic 3D Tokyo."</span>
+        <span class="lang-zh" style="display:none"><strong>3D 瓦片时空游戏</strong>（网页）——基于谷歌开源的 3D Tiles 方案："这是一张 1910 年的照片——在今天照片级 3D 东京里找到这个确切位置。"</span></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2 class="sec"><span class="lang-en">Shared base: the Tokyo Graph</span><span class="lang-zh" style="display:none">共享基础：东京图谱</span></h2>
+    <p class="lang-en">One MCP server — or a versioned GeoJSON bundle if time is short — exposing shrines, yokai sites, Edo place names, anime spots, station melodies, buried rivers, hazard zones, and live trains as tools every team can call. Data and repos to build on:</p>
+    <p class="lang-zh" style="display:none">一个 MCP 服务器——或时间紧张时用一份带版本的 GeoJSON 数据包——把神社、妖怪传说地、江户地名、动画圣地、车站旋律、暗渠、灾害风险区与实时列车，暴露为所有队伍都能调用的工具。可用的数据与仓库：</p>
+
+    <div class="lang-en">
+    <table>
+      <tr><th>Need</th><th>Source</th><th>Notes</th></tr>
+      <tr><td>Live trains</td><td>ODPT API · <a href="https://github.com/nagix/mini-tokyo-3d">nagix/mini-tokyo-3d</a> · <a href="https://github.com/MKuranowski/TokyoGTFS">MKuranowski/TokyoGTFS</a></td><td><strong>Register for the ODPT key now — approval is not instant.</strong> Static GTFS is the no-key fallback.</td></tr>
+      <tr><td>Boundaries</td><td><a href="https://github.com/geolonia/open-reverse-geocoder">Geolonia open-reverse-geocoder</a> + Geolonia MapLibre styles</td><td>Japanese open-source geo org; vector tiles from MLIT boundary data.</td></tr>
+      <tr><td>3D city</td><td>PLATEAU (MLIT) · <a href="https://github.com/tokyo-digitaltwin">tokyo-digitaltwin</a> GitHub org</td><td>Free, including commercial use; CityGML → CityJSON tooling exists.</td></tr>
+      <tr><td>Google 3D</td><td>Photorealistic 3D Tiles · 3D Area Explorer &amp; 3D Storytelling solution repos · deck.gl</td><td>Needs a Maps key + billing. Apple MapKit is the free native alternative.</td></tr>
+      <tr><td>Shrines &amp; temples</td><td>OpenStreetMap via the Overpass API</td><td>Tag query: <code>amenity=place_of_worship</code> with <code>religion=shinto</code> / <code>buddhist</code>.</td></tr>
+      <tr><td>Yokai &amp; folklore</td><td>Nichibunken Kaii-Yōkai Densho DB · yokai.jp</td><td>~35k records, no API — curate a subset.</td></tr>
+      <tr><td>Edo maps &amp; places</td><td>Rekichizu · CODH edomi (~8,700 place names)</td><td>Rekichizu is CC BY-NC-ND — demo use.</td></tr>
+      <tr><td>Heritage</td><td>Japan Search (SPARQL + Web API)</td><td>Millions of cultural-heritage records.</td></tr>
+      <tr><td>Literature</td><td>Aozora Bunko</td><td>Public-domain Japanese texts — the RAG corpus.</td></tr>
+      <tr><td>Station melodies</td><td>"The Bells of Tokyo" catalogue</td><td>~517 melody entries — seed data for the flagship.</td></tr>
+      <tr><td>Anime spots</td><td>Anime Tourism Association "88 Spots" list</td><td>Official, numbered, with stamp plaques on site.</td></tr>
+      <tr><td>Hazards</td><td>Tokyo Metropolitan Gov Open Data API</td><td>Flood / tsunami / quake risk by block. No sign-up.</td></tr>
+    </table>
+    </div>
+
+    <div class="lang-zh" style="display:none">
+    <table>
+      <tr><th>需求</th><th>来源</th><th>备注</th></tr>
+      <tr><td>实时列车</td><td>ODPT API · <a href="https://github.com/nagix/mini-tokyo-3d">nagix/mini-tokyo-3d</a> · <a href="https://github.com/MKuranowski/TokyoGTFS">MKuranowski/TokyoGTFS</a></td><td><strong>立即申请 ODPT 密钥——审批并非即时。</strong>静态 GTFS 是无密钥备用方案。</td></tr>
+      <tr><td>行政区划</td><td><a href="https://github.com/geolonia/open-reverse-geocoder">Geolonia open-reverse-geocoder</a> + Geolonia MapLibre 样式</td><td>日本开源地理团队；基于国土交通省数据的矢量瓦片。</td></tr>
+      <tr><td>3D 城市</td><td>PLATEAU（国土交通省） · <a href="https://github.com/tokyo-digitaltwin">tokyo-digitaltwin</a> GitHub 组织</td><td>免费，含商业使用；已有 CityGML → CityJSON 工具。</td></tr>
+      <tr><td>谷歌 3D</td><td>照片级 3D Tiles · 3D Area Explorer 与 3D Storytelling 方案仓库 · deck.gl</td><td>需要地图密钥与计费账户；Apple MapKit 是免费的原生替代。</td></tr>
+      <tr><td>神社与寺庙</td><td>OpenStreetMap（Overpass API）</td><td>标签查询：<code>amenity=place_of_worship</code> 配 <code>religion=shinto</code> / <code>buddhist</code>。</td></tr>
+      <tr><td>妖怪与传说</td><td>日文研"怪异·妖怪传说数据库" · yokai.jp</td><td>约 3.5 万条记录，无 API——人工精选子集。</td></tr>
+      <tr><td>江户地图与地名</td><td>Rekichizu · CODH edomi（约 8,700 个地名）</td><td>Rekichizu 为 CC BY-NC-ND——仅限演示。</td></tr>
+      <tr><td>文化遗产</td><td>Japan Search（SPARQL + Web API）</td><td>数百万条文化遗产记录。</td></tr>
+      <tr><td>文学</td><td>青空文库</td><td>日本公版书库——RAG 语料来源。</td></tr>
+      <tr><td>车站旋律</td><td>"The Bells of Tokyo" 目录</td><td>约 517 条旋律记录——旗舰选题的种子数据。</td></tr>
+      <tr><td>动画圣地</td><td>动画旅游协会《圣地 88 选》</td><td>官方编号名单，实地设有印章牌。</td></tr>
+      <tr><td>灾害风险</td><td>东京都开放数据 API</td><td>按街区的洪水 / 海啸 / 地震风险。无需注册。</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 class="sec"><span class="lang-en">What wins in Tokyo</span><span class="lang-zh" style="display:none">什么样的作品能在东京胜出</span></h2>
+    <p class="lang-en">Tokyo has run open-data contests for years, and the winners share a shape — a familiar Tokyo experience made newly visible by data: <strong>Mini Tokyo 3D</strong> (Grand Award at the ODPT Challenge), the <strong>PIEN</strong> irregular-event notifier, a crowd forecast, <strong>SHARE WALK</strong>, an anime location finder, <strong>Sounds of Transport</strong>, and 2025's <strong>Traffic Echo</strong>. Chatbots-over-documents don't win these; field-connected builds do.</p>
+    <p class="lang-zh" style="display:none">东京举办开放数据竞赛多年，获奖作品有一个共同形状——用数据让熟悉的东京体验以新的方式被看见：<strong>Mini Tokyo 3D</strong>（ODPT 挑战赛大奖）、异常事件通知 <strong>PIEN</strong>、客流预测、<strong>SHARE WALK</strong>、动画取景地查找器、<strong>Sounds of Transport</strong>，以及 2025 年的 <strong>Traffic Echo</strong>。"在文档上套个聊天机器人"赢不了这类比赛；与实地相连的作品才行。</p>
+  </section>
+
+  <section class="card">
+    <h2 class="sec"><span class="lang-en">Practical notes</span><span class="lang-zh" style="display:none">实用提示</span></h2>
+    <ul>
+      <li><span class="lang-en"><strong>Keys:</strong> request the ODPT key now (approval takes time); a Google Maps Platform key powers the 3D Tiles; MapKit needs no key.</span>
+        <span class="lang-zh" style="display:none"><strong>密钥：</strong>ODPT 立即申请（审批需要时间）；3D Tiles 需谷歌地图平台密钥；MapKit 无需密钥。</span></li>
+      <li><span class="lang-en"><strong>Licenses:</strong> PLATEAU is free including commercial use; Rekichizu is CC BY-NC-ND (demo only); the Nichibunken databases have no API — check before anything goes public.</span>
+        <span class="lang-zh" style="display:none"><strong>许可：</strong>PLATEAU 免费含商用；Rekichizu 为 CC BY-NC-ND（仅限演示）；日文研数据库无 API——任何内容公开发布前先核查许可。</span></li>
+      <li><span class="lang-en"><strong>Language:</strong> most sources are Japanese-first — LLM translation and summarization is legitimately part of each build.</span>
+        <span class="lang-zh" style="display:none"><strong>语言：</strong>多数数据源以日文为主——用大模型翻译与摘要，本身就是开发的一部分。</span></li>
+      <li><span class="lang-en"><strong>Platform:</strong> one SwiftUI multiplatform target yields both the iPhone and the Mac app; the web (MapLibre / deck.gl) is the fastest path for map games.</span>
+        <span class="lang-zh" style="display:none"><strong>平台：</strong>一个 SwiftUI 多平台工程即可同时产出 iPhone 与 Mac 应用；网页（MapLibre / deck.gl）是地图类游戏的最快路径。</span></li>
+    </ul>
+  </section>
+
+</main>
+<footer>
+  <span class="lang-en">Team brief · Oct 25, 2026 · Feedmob Tokyo trip.</span>
+  <span class="lang-zh" style="display:none">团队简报 · 2026 年 10 月 25 日 · Feedmob 东京之行。</span>
+</footer>
+<script>
+function setLang(l) {
+  document.querySelectorAll('.lang-en').forEach(function(e){ e.style.display = (l === 'en') ? '' : 'none'; });
+  document.querySelectorAll('.lang-zh').forEach(function(e){ e.style.display = (l === 'zh') ? '' : 'none'; });
+  document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.lang === l); });
+  document.documentElement.lang = (l === 'zh') ? 'zh-CN' : 'en';
+  document.body.lang = (l === 'zh') ? 'zh-CN' : 'en';
+}
+</script>
+</body>
+</html>
