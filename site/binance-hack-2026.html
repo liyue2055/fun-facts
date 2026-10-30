@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Incident Record: The Binance Hack of Oct 29, 2026 — What We Know So Far</title>
+<meta name="description" content="Preliminary bilingual record of the October 29, 2026 Binance hack (~$6.3B): timeline, attack vector, attribution, the AI question, and what is still unknown. Developing story — Binance's full post-mortem pending.">
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: Georgia, 'Times New Roman', serif; background: #f7f2e9; color: #2b2620; margin: 0; padding: 0; line-height: 1.7; }
+  header { text-align: center; padding: 56px 20px 20px; max-width: 860px; margin: 0 auto; }
+  header .kicker { font-size: .8rem; letter-spacing: 3px; color: #b39b6d; text-transform: uppercase; }
+  header h1 { font-size: 2.1rem; margin: 10px 0 8px; letter-spacing: -0.5px; line-height: 1.25; }
+  header p.sub { color: #8a7f6d; font-style: italic; margin: 0; }
+  main { max-width: 860px; margin: 0 auto; padding: 10px 20px 64px; }
+  .tldr { background: #fffdf8; border: 2px solid #d8cba8; border-radius: 14px; padding: 22px 26px; margin: 26px 0 34px; box-shadow: 0 2px 10px rgba(90,70,40,.06); }
+  .tldr h2 { margin: 0 0 10px; font-size: 1.1rem; }
+  .tldr p { margin: 0 0 8px; }
+  .status { background: #fdf3e3; border: 1px solid #e3cf9f; border-radius: 10px; padding: 14px 20px; margin: 0 0 30px; font-size: .95rem; }
+  h2.sec { font-size: 1.35rem; margin: 38px 0 6px; line-height: 1.35; }
+  h2.sec .zh { color: #8a7f6d; font-size: 1.05rem; }
+  p { margin: 0 0 12px; color: #3d362a; }
+  p.zh { color: #5c5342; }
+  ul { margin: 0 0 14px; padding-left: 22px; color: #3d362a; }
+  li { margin-bottom: 6px; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 18px; background: #fffdf8; border: 1px solid #e8dfcd; border-radius: 10px; overflow: hidden; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid #eee3cd; font-size: .95rem; vertical-align: top; }
+  th { background: #f3ecdb; }
+  tr:last-child td { border-bottom: none; }
+  .verdict { background: #eef4e6; border: 1px solid #c4d6ab; border-radius: 10px; padding: 14px 20px; margin: 14px 0 20px; }
+  .verdict p { margin: 0; }
+  footer { text-align: center; color: #8a7f6d; font-size: .85rem; padding-bottom: 40px; font-style: italic; max-width: 860px; margin: 0 auto; }
+  a { color: #8a6d2f; }
+  @media (max-width: 640px) { header h1 { font-size: 1.6rem; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="kicker">Incident Record · Developing Story</div>
+  <h1>The Binance Hack of October 29, 2026 — What We Know So Far</h1>
+  <p class="sub">2026年10月29日币安被黑事件 — 目前已知的情况（持续更新中）</p>
+</header>
+<main>
+
+  <div class="status">
+    <strong>Status / 状态：</strong> Preliminary record opened Oct 31, 2026. Binance has confirmed the incident and given an initial cause, but its <strong>full technical post-mortem is still pending</strong>. Figures below are the best available estimates and may be revised. A follow-up check is scheduled for Nov 7, 2026.<br>
+    本记录于 2026 年 10 月 31 日建立。币安已确认事件并给出初步原因，但<strong>完整技术复盘尚未发布</strong>。以下数字为目前最佳估计，后续可能修正。已定于 2026 年 11 月 7 日回访核查。
+  </div>
+
+  <div class="tldr">
+    <h2>TL;DR</h2>
+    <p>On Thu Oct 29, 2026, attackers drained Binance's hot wallets across 10 blockchains in roughly half an hour. Binance estimates the impact at <strong>~$6.3 billion</strong> — the largest crypto theft on record, about 4× the 2025 Bybit heist. About <strong>$3 billion has been frozen</strong> on-chain, and Binance says user losses will be fully covered. Binance's preliminary finding: the attack began with a <strong>compromised DevOps engineer's laptop</strong>, which gave access to a service container used to submit unauthorized withdrawals. No wallet private keys leaked — the signing system itself was misused. TRM Labs and Chainalysis attribute the attack to North Korea's <strong>TraderTraitor</strong> group; Binance has not confirmed attribution. <strong>There is no evidence that AI or an AI agent carried out this attack</strong> (see §5).</p>
+    <p class="zh">2026 年 10 月 29 日（周四），攻击者在约半小时内掏空了币安在 10 条区块链上的热钱包。币安估计损失约 <strong>63 亿美元</strong>，为史上最大加密货币盗窃案，约为 2025 年 Bybit 事件的 4 倍。约 <strong>30 亿美元已被链上冻结</strong>，币安表示用户损失将全额赔付。币安初步结论：攻击始于一台<strong>被攻陷的 DevOps 工程师笔记本电脑</strong>，攻击者借此进入一个用于提交提现的服务容器。钱包私钥并未泄露——被滥用的是签名系统本身。TRM Labs 与 Chainalysis 将攻击归因于朝鲜黑客组织 <strong>TraderTraitor</strong>；币安尚未确认归因。<strong>目前没有证据表明 AI 或 AI 智能体实施了此次攻击</strong>（见第 5 节）。</p>
+  </div>
+
+  <h2 class="sec">1. Timeline <span class="zh">时间线</span></h2>
+  <ul>
+    <li><strong>Oct 28–29:</strong> The attacker's wallet was funded through the Tornado Cash mixer a day before the attack. / 攻击前一天，攻击者钱包经 Tornado Cash 混币器注资。</li>
+    <li><strong>Oct 29, ~20:05 UTC:</strong> Binance wallets on 10 blockchains (Ethereum, Bitcoin, Tron, Solana, XRP Ledger, and others) begin sending balances to attacker-controlled addresses; most of the drain happens within ~20–30 minutes. / 币安在 10 条链上的钱包开始向攻击者地址转出余额，主要转出在约 20–30 分钟内完成。</li>
+    <li><strong>Within the first hour:</strong> Tether freezes ~$1.567B USDT and Circle freezes ~$800M+ USDC linked to the incident; Aave freezes lending markets to block laundering through borrowing. / 第一小时内，Tether 冻结约 15.67 亿美元 USDT，Circle 冻结 8 亿多美元 USDC；Aave 冻结借贷市场以阻断洗钱路径。</li>
+    <li><strong>Oct 29 (evening):</strong> Binance acknowledges a "potential security issue," suspends deposits and withdrawals. CZ posts that it "does look like a hack" and user funds are safe. / 币安承认存在"潜在安全问题"，暂停充提。CZ 发帖称"看起来确实是被黑"，并表示用户资金安全。</li>
+    <li><strong>Oct 30:</strong> Binance's update estimates total impact at ~$6.3B, ~$3B frozen, names the compromised DevOps laptop as the likely starting point, and promises a full technical post-mortem. Withdrawals expected to resume in ~48 hours after a security revamp of the withdrawal service. / 币安更新：总影响约 63 亿美元，约 30 亿已冻结；初步指向被攻陷的 DevOps 笔记本；承诺发布完整技术复盘。提现服务安全改造后预计约 48 小时恢复。</li>
+  </ul>
+
+  <h2 class="sec">2. The numbers <span class="zh">数字</span></h2>
+  <table>
+    <tr><th>Estimate / 估计</th><th>Source / 来源</th></tr>
+    <tr><td>~$5.6–5.8B in outflows</td><td>On-chain trackers (Watcher Guru / Arkham / Lookonchain), first hours / 链上追踪机构（最初数小时）</td></tr>
+    <tr><td>~$5.91B stolen at time of theft</td><td>Chainalysis</td></tr>
+    <tr><td><strong>~$6.3B total impact</strong></td><td><strong>Binance (Oct 30 update) / 币安官方（10 月 30 日更新）</strong></td></tr>
+    <tr><td>~$3B frozen on-chain</td><td>Binance, with Tether, Circle and other issuers / 币安与 Tether、Circle 等发行方</td></tr>
+    <tr><td>$1.5B — previous record (Bybit, Feb 2025)</td><td>For scale / 对比：此前纪录</td></tr>
+  </table>
+  <p>Note: outflow totals are not identical to confirmed theft; the final figure depends on which transfers Binance confirms as unauthorized. / 注意：转出总额不等于最终确认的被盗金额，最终数字取决于币安确认哪些转账未经授权。</p>
+
+  <h2 class="sec">3. How it happened (preliminary) <span class="zh">攻击手法（初步）</span></h2>
+  <p>Binance co-CEO Richard Teng: the incident "may have started with a compromised DevOps engineer's laptop," which gave the attacker access to a service container from which unauthorized withdrawal transactions were submitted. Teng stressed the attacker "did not simply use one engineer's permissions" and it was "not a single 'one-click' action"; Binance has since found <strong>additional points of breach</strong>. Critically, Binance found <strong>no evidence of a wallet private-key leak</strong> — Blockaid's assessment agrees: this was <strong>key misuse</strong>, tricking or compromising the signing infrastructure into authorizing malicious transactions. On Ethereum, the attacker bundled <strong>50 pre-signed EIP-7702 authorizations</strong> into a single transaction, delegating a Binance hot wallet to a sweeper contract — signatures obtained in advance, indicating a long-prepared operation.</p>
+  <p class="zh">币安联席 CEO Richard Teng 表示：事件"可能始于一台被攻陷的 DevOps 工程师笔记本"，攻击者借此进入服务容器并提交未授权提现。Teng 强调攻击者"并非只是使用了一名工程师的权限"，也"不是一次点击完成的简单操作"；币安随后还发现了<strong>更多入侵点</strong>。关键一点：币安<strong>未发现钱包私钥泄露的证据</strong>——Blockaid 的评估一致：这是<strong>密钥滥用</strong>，即诱骗或攻陷签名基础设施来授权恶意交易。在以太坊上，攻击者将 <strong>50 份预签名的 EIP-7702 授权</strong>打包进一笔交易，把币安热钱包委托给一个清扫合约——签名系提前获取，显示这是一次长期准备的行动。</p>
+
+  <h2 class="sec">4. Who is blamed <span class="zh">归因</span></h2>
+  <p>TRM Labs attributes the operation to <strong>TraderTraitor</strong>, a North Korean state-sponsored group — the same unit the FBI named for the $1.5B Bybit theft (Feb 2025). Chainalysis's CEO said his firm also assesses TraderTraitor as the likely culprit, with high confidence. Binance has <strong>not</strong> confirmed attribution. TraderTraitor's known playbook targets <em>people rather than technology</em>: fake job offers and interviews ("Contagious Interview" campaign) that trick developers into running malware on their own machines. Binance has said it blocked a week of North Korea-linked attacks from that campaign shortly before this incident; it has not said whether the compromised laptop is connected to it.</p>
+  <p class="zh">TRM Labs 将此次行动归因于朝鲜国家支持的黑客组织 <strong>TraderTraitor</strong>——即 FBI 认定的 2025 年 2 月 Bybit 15 亿美元盗窃案的实施者。Chainalysis CEO 表示该公司同样高度确信是 TraderTraitor。币安<strong>尚未</strong>确认归因。TraderTraitor 的惯用手法是攻击<em>人而非技术</em>：以虚假招聘与面试（"Contagious Interview"行动）诱骗开发者在自己的电脑上运行恶意代码。币安曾表示在事件前不久拦截了该行动为期一周的攻击；但未说明这台被攻陷的笔记本是否与之相关。</p>
+
+  <h2 class="sec">5. Was AI involved? <span class="zh">AI 是否参与？</span></h2>
+  <div class="verdict">
+    <p><strong>Verdict: No evidence.</strong> Neither Binance nor TRM Labs has published any evidence of AI or autonomous agents in this attack. / <strong>结论：没有证据。</strong>币安与 TRM Labs 均未发布任何 AI 或自主智能体参与此次攻击的证据。</p>
+  </div>
+  <p>Why the AI story spread: Elon Musk, reacting to a viral post about the attacker dodging stablecoin freezes by borrowing ETH against stolen USDT on Aave, posted "Everyday is Zeroday" and wrote that "super intelligence agents will at some point do this to gain currency for themselves, not a human." That is speculation about the future, not a claim about this incident. A second viral version — "an AI agent scanned millions of files in three seconds, found an engineer's password, and emptied the vault" — is contradicted by Binance's and TRM's accounts (no password or key was taken; the signing system was misused through prepared authorizations). The one verified AI role was on <strong>defense</strong>: Blockaid says its AI models flagged the drain within about two minutes of the first sweep.</p>
+  <p class="zh">AI 叙事为何传播：Elon Musk 在回应一条关于攻击者用被盗 USDT 在 Aave 抵押借出 ETH 以绕开冻结的病毒帖时，发帖称"Everyday is Zeroday"，并写道"超级智能体将来总有一天会这样做，为自己获取资金，而不是为人类"。这是对未来的推测，而非对本次事件的断言。另一个病毒版本称"AI 智能体在三秒内扫描了数百万文件、找到工程师密码并掏空金库"——这与币安和 TRM 的说法直接矛盾（没有密码或密钥被窃取；签名系统是经预先准备的授权被滥用的）。唯一经证实的 AI 角色在<strong>防御方</strong>：Blockaid 表示其 AI 模型在第一波转出后约两分钟内就标记了异常。</p>
+  <p>A nuance worth keeping: in 2026 an engineer's laptop holds tokens, cloud sessions, repository access — and increasingly AI tooling that acts with that engineer's permissions. Endpoint compromise therefore reaches further than it used to. That is context for why laptop hygiene matters more now, not evidence that an agent ran this attack. / 一个值得保留的细微点：2026 年的工程师笔记本里装着令牌、云会话、代码仓库权限——以及越来越多以该工程师权限行事的 AI 工具。因此，一台终端被攻陷的波及范围比过去更大。这是"为什么笔记本安全卫生如今更重要"的背景，而非智能体实施了此次攻击的证据。</p>
+
+  <h2 class="sec">6. What we are still watching <span class="zh">待确认事项</span></h2>
+  <ul>
+    <li>Binance's full technical post-mortem: exact entry vector for the laptop, the "additional points of breach," and how the signing system was induced to approve withdrawals across 10 chains. / 币安完整技术复盘：笔记本的确切入侵路径、"更多入侵点"的细节，以及签名系统如何被诱导批准 10 条链的提现。</li>
+    <li>Final confirmed loss figure and how much of the ~$3B frozen is ultimately recovered. / 最终确认的损失数字，以及约 30 亿美元冻结资产中最终能追回多少。</li>
+    <li>Whether Binance confirms the TraderTraitor attribution and any link to the Contagious Interview campaign. / 币安是否确认 TraderTraitor 归因，以及与 Contagious Interview 行动的关联。</li>
+    <li>Withdrawal resumption and the promised updated proof of reserves. / 提现恢复情况与承诺的最新储备金证明。</li>
+  </ul>
+
+  <h2 class="sec">Sources <span class="zh">来源</span></h2>
+  <ul>
+    <li>Binance official updates and statements by co-CEO Richard Teng and co-founder Yi He (Oct 29–30, 2026), via BleepingComputer, The Hacker News, Cointelegraph reporting.</li>
+    <li>TRM Labs and Chainalysis on-chain estimates and attribution statements.</li>
+    <li>Blockaid forensic analysis (EIP-7702 delegation; signing-infrastructure compromise).</li>
+    <li>Tether (Paolo Ardoino) and Circle (Jeremy Allaire) freeze announcements.</li>
+    <li>Wall Street Journal (first report, ≥$1.7B), Reuters (freeze totals), BBC reporting of Teng's remarks.</li>
+  </ul>
+  <p><em>Record opened Oct 31, 2026. This page will be updated when Binance publishes its full post-mortem. / 本记录建立于 2026 年 10 月 31 日。币安发布完整复盘后将更新本页。</em></p>
+
+</main>
+<footer>fun.feedos.si · incident records for the team · 团队事件记录</footer>
+</body>
+</html>
